@@ -22,6 +22,4 @@ Route::get('/search', function () {
     return 'Zoekalgoritme komt hier';
 });
 
-Route::get('/upload', function () {
-    return 'Upload PDF file komt hier';
-});
+Route::get('/upload', 'UploadController');
