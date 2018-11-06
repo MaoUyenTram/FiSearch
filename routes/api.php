@@ -23,3 +23,4 @@ Route::get('/search', function () {
 });
 
 Route::get('/upload', 'UploadController');
+
