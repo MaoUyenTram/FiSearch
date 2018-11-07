@@ -24,3 +24,4 @@ Route::get('/search', function () {
 
 Route::get('/upload', 'UploadController');
 
+Route::get('/departments', 'DepartmentsController');
