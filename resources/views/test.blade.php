@@ -11,23 +11,42 @@ use Smalot\PdfParser\Parser;
 // de inefficient windows versie
 // Parse pdf file and build necessary objects.
 $parser = new Parser();
-$pdf    = $parser->parseFile('pdf\test.pdf');
+$pdf    = $parser->parseFile('pdf\randomeindwerk.pdf');
 
-echo $pdf->getText();
 
 // Retrieve all pages from the pdf file.
 $pages  = $pdf->getPages();
+$a = 0;
+
 
 // Loop over each page to extract text.
-foreach ($pages as $page) {
-    echo $page->getText();
-    $words = utf8_str_word_count($page->getText(), 1); // use this function if you care about i18n
+//foreach ($pages as $page) {
 
+    if ($a < 10){
+    $words = utf8_str_word_count($pdf->getText(), 1);
+    if (count($words) > 1){
+    $new_str = preg_replace('~[\\\\/:*?"<>|]~','', implode(" ",$words));
+    $bigstr = explode(" ",$new_str);
     $frequency = array_count_values($words);
 
     arsort($frequency);
     print_r($frequency);
+    //echo $page->getText();
+    }
+    }
+
+    $a ++;
+//    }
+$details  = $pdf->getDetails();
+
+// Loop over each property to extract values (string or array).
+foreach ($details as $property => $value) {
+    if (is_array($value)) {
+        $value = implode(', ', $value);
+    }
+    echo $property . ' => ' . $value . "\n";
 }
+
 
 function utf8_str_word_count($string, $format = 0, $charlist = null)
 {
