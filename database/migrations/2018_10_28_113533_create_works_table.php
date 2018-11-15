@@ -15,7 +15,6 @@ class CreateWorksTable extends Migration
     {
         Schema::create('works', function (Blueprint $table) {
             $table->increments('id');
-            $table->foreign('user_name')->references('name')->on('users');
             $table->integer('year');
             $table->timestamps();
 
