@@ -14,10 +14,20 @@ class CreateWorksTable extends Migration
     public function up()
     {
         Schema::create('works', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('year');
-            $table->timestamps();
+            $table->increments('finalworkID'); //finalworkID
+            $table->string('finalworkTitle');
+            $table->string('finalworkDescription');
+            $table->string('finalworkAuthor');
+            $table->integer('finalworkYear');
 
+            // laat die indexes maar da gaat toch errors geven
+            // ge moet nu wel nog een table maken voor promoters
+            // na composer install enz (.env maken etc)
+            $table->integer('promoterID');
+            
+            $table->integer('workTagID');
+
+            $table->timestamps();
 
         });
     }

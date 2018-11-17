@@ -11,11 +11,6 @@ class WorksTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('works')->insert([
-            'user_name' => 'admin',
-            'year' => 2018,
-        ]);
-
-        factory(App\Work::class, 5)->create();
+      factory(App\Work::class, 30)->create();
     }
 }
