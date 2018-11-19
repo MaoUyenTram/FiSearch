@@ -16,12 +16,11 @@ class UploadController extends Controller
      */
     public function __invoke(Request $request)
     {
-        $pdf = $request->file('pdf');
-        $text = $pdf->getText();
-        //$words = str_word_count($pdf->getText());
-        //$new_str = preg_replace('~[\\\\/:*?"<>|]~', '', $pdf->getText());
+        $parser = new Parser();
+        $pdf =$parser->parseFile($request->file('pdf'));
+        $text = preg_replace('~[\\\\/:*?"<>|]~', '', $pdf->getText());
 
-        /*$client = new Client();
+        $client = new Client();
 
         $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
             'headers' => [
@@ -39,8 +38,7 @@ class UploadController extends Controller
                 ]
             ]
         ]);
-        return $response->getBody();*/
-        return var_dump($text);
+        return json_decode($response->getBody(),true);
 
     }
 }
