@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Work extends Model
 {
+    /**
+     * Overschrijf de ID kolom van 'id' naar 'finalworkID'.
+     */
+    protected $primaryKey = 'finalworkID';
+
     protected $fillable = [
        'finalworkTitle','finalworkDescription','finalworkAuthor','finalworkYear','promoterID', 'workTagID'
 

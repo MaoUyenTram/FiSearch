@@ -41,7 +41,6 @@ class UploadController extends Controller
             ]
         ]);
         return json_decode($response->getBody(),true);
-        return var_dump($pdf);
 
     }
 }
