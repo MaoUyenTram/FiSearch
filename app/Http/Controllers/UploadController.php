@@ -3,51 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Spatie\PdfToText\Pdf;
+use Smalot\PdfParser\Parser;
+use GuzzleHttp\Client;
 
 class UploadController extends Controller
 {
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request)
     {
-        $text = (new Pdf('/vendor/spatie/pdf-to-text/src'))->setPdf('pdf/test.pdf')->text();
-        // Retrieve all pages from the pdf file.
+        $parser = new Parser();
+        $pdf = $parser->parseFile($request->file('pdf'));
+        $name = $request->file('pdf')->getClientOriginalName();
+        $request->file('pdf')->move(public_path('pdf'),$name);
+        $text = preg_replace('~[\\\\/:*?"<>|]~', '', $pdf->getText());
 
-// Loop over each page to extract text.
+        $client = new Client();
 
-            $words = utf8_str_word_count($text, 1); // use this function if you care about i18n
-
-            $frequency = array_count_values($words);
-
-            arsort($frequency);
-            print_r($frequency); 
+        $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
+            'headers' => [
+                'Ocp-Apim-Subscription-Key' => 'c9081ce68d9541cba44b8b78684e8ce5',
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ],
+            'json' => [
+                'documents' => [
+                    [
+                        'language' => 'nl',
+                        'id' => '1',
+                        'text' => $text,
+                    ],
+                ]
+            ]
+        ]);
+        return json_decode($response->getBody(),true);
 
     }
-
-    function utf8_str_word_count($string, $format = 0, $charlist = null)
-    {
-        $result = []; 
-
-        if (preg_match_all('~[\p{L}\p{Mn}\p{Pd}\'\x{2019}' . preg_quote($charlist, '~') . ']+~u', $string, $result) > 0)
-        {
-            // type hinting?
-            if ( (bool)array_key_exists(0, $result) === true)
-            {
-                $result = $result[0];
-            }
-        }
-
-        if ($format === 0)
-        {
-            $result = count($result);
-        }
-
-        return $result;
-    }
-
 }
