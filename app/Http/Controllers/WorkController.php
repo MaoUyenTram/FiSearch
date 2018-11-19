@@ -137,6 +137,8 @@ class WorkController extends Controller
      */
     public function destroy($id)
     {
-        return response()->json(['message' => Work::findorFail($id)->delete() ? 'Success.' : 'Failed.']);
+        return response()->json([
+            'message' => Work::where('finalworkID', '=', $id)->firstOrFail()->delete() ? 'Success.' : 'Failed.'
+        ]);
     }
 }

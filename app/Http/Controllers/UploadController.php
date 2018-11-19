@@ -25,24 +25,24 @@ class UploadController extends Controller
             $frequency = array_count_values($words);
 
             arsort($frequency);
-            print_r($frequency);
-
+            print_r($frequency); 
 
     }
 
     function utf8_str_word_count($string, $format = 0, $charlist = null)
     {
-        $result = array();
+        $result = []; 
 
         if (preg_match_all('~[\p{L}\p{Mn}\p{Pd}\'\x{2019}' . preg_quote($charlist, '~') . ']+~u', $string, $result) > 0)
         {
-            if (array_key_exists(0, $result) === true)
+            // type hinting?
+            if ( (bool)array_key_exists(0, $result) === true)
             {
                 $result = $result[0];
             }
         }
 
-        if ($format == 0)
+        if ($format === 0)
         {
             $result = count($result);
         }
