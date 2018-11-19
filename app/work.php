@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class Work extends Model
 {
     protected $fillable = [
-        'user_name','year',
+       'finalworkTitle','finalworkDescription','finalworkAuthor','finalworkYear','promoterID', 'workTagID'
+
     ];
 
     protected $table = 'works';
