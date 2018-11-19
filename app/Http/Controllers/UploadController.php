@@ -17,7 +17,9 @@ class UploadController extends Controller
     public function __invoke(Request $request)
     {
         $parser = new Parser();
-        $pdf =$parser->parseFile($request->file('pdf'));
+        $pdf = $parser->parseFile($request->file('pdf'));
+        $name = $request->file('pdf')->getClientOriginalName();
+        $request->file('pdf')->move(public_path('pdf'),$name);
         $text = preg_replace('~[\\\\/:*?"<>|]~', '', $pdf->getText());
 
         $client = new Client();
@@ -39,6 +41,7 @@ class UploadController extends Controller
             ]
         ]);
         return json_decode($response->getBody(),true);
+        return var_dump($pdf);
 
     }
 }
