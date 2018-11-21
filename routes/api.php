@@ -30,3 +30,4 @@ Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
 Route::resource('works', 'WorkController');
 Route::get('works/by_title/{title}', 'WorkController@showByTitle');
 
+Route::get('/pdftoimage', 'PdfToImageController');
