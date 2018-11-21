@@ -11,10 +11,6 @@
 |
 */
 
-Route::get('/test', function () {
-    return view('test');
-});
-
-Route::get('/upload', function () {
-    return view('upload');
+Route::get('/', function() {
+    return view('welcome');
 });
