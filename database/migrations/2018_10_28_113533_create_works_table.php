@@ -13,11 +13,12 @@ class CreateWorksTable extends Migration
      */
     public function up()
     {
-        Schema::create('works', function (Blueprint $table) {
+            Schema::create('works', function (Blueprint $table) {
             $table->increments('finalworkID'); //finalworkID
             $table->string('finalworkTitle');
             $table->string('finalworkDescription');
             $table->string('finalworkAuthor');
+            $table->string('departement');
             $table->integer('finalworkYear');
 
             // laat die indexes maar da gaat toch errors geven

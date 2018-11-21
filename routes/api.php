@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Http\Request;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,5 +28,7 @@ Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
 
 Route::resource('works', 'WorkController');
 Route::get('works/by_title/{title}', 'WorkController@showByTitle');
-
+Route::get('works/by_departement/{departement}', 'WorkController@showByDepartement');
 Route::get('/pdftoimage', 'PdfToImageController');
+
+Route::get('/filter', 'WorkController@filter');

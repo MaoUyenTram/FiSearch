@@ -5,6 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Work;
 use App\Http\Resources\WorkResource;
+use Illuminate\Support\Facades\Input;
+
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
 
 class WorkController extends Controller
 {
@@ -57,23 +62,20 @@ class WorkController extends Controller
     }
 
     public function firstOrResponse($field, $value) {
-        /*
-        $work = Work::where($field, '=', $value)->first();
-
-        if (! $work) {
-            return response()->json([
-                "Final work not found with $field: $value"
-            ], 404);
-        }
-
-        return new WorkResource($work);
-        */
-
-        return ($work = Work::where($field, '=', $value)->first()) instanceof Work ?
+        return ($work = Work::where($field, 'LIKE', $value)->get()) instanceof Work ?
             new WorkResource($work) : response()->json([
                 "Final work not found with $field: $value"
             ], 404);
     }
+
+
+    public function searchLIKE($field, $value) {
+        return ($work = Work::where($field, 'LIKE', $value)->get()) instanceof Work ?
+            new WorkResource($work) : response()->json([
+                "Final work not found with $field: $value"
+            ], 404);
+    }
+
 
     /**
      * Display the specified resource.
@@ -88,7 +90,14 @@ class WorkController extends Controller
 
     public function showByTitle($title)
     {
-        return $this->firstOrResponse('finalworkTitle', $title);
+        return Work::where('finalworkTitle', 'LIKE', '%'.$title.'%')->get();
+        /*return $this->firstOrResponse('finalworkTitle',  $title);*/
+    }
+
+    public function showByDepartement($departement)
+    {
+        return Work::where('departement', 'LIKE', '%'.$departement.'%')->get();
+        /*return $this->firstOrResponse('departement', $departement);*/
     }
 
     /**
@@ -140,5 +149,29 @@ class WorkController extends Controller
         return response()->json([
             'message' => Work::where('finalworkID', '=', $id)->firstOrFail()->delete() ? 'Success.' : 'Failed.'
         ]);
+    }
+
+    public function filter(Request $request, Work $work)
+    {
+     
+        $works = (new Work)->newQuery();
+
+        // Search for a user based on their name.
+        if ($request->has('departement')) {
+            $works->where('departement', $request->Input('departement'));
+        }
+
+        // Search for a user based on their company.
+        if ($request->has('year')) {
+            $works->where('finalworkYear',$request->input('year'));
+        }
+
+        // Search for a user based on their city.
+        if ($request->has('city')) {
+            $works->where('city', $request->input('city'));
+        }
+
+        // Get the results and return them.
+        return $works->get();
     }
 }

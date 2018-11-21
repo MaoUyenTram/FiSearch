@@ -7,6 +7,7 @@ $factory->define(App\Work::class, function (Faker $faker) {
         'finalworkTitle'=> $faker->text,
         'finalworkDescription'=> $faker->text,
         'finalworkAuthor'=> $faker->name,
+        'departement'=> $faker->name,
         'finalworkYear'=> $faker->year,
         'promoterID'=> $faker->randomDigitNotNull,
         'workTagID'=> $faker->randomDigitNotNull
