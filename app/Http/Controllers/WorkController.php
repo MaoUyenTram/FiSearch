@@ -32,9 +32,9 @@ class WorkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($finalworkTitle,$finalworkDescription,$finalworkAuthor,$finalworkYear,$promoterID,$workTagID)
+    public function create($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement, $finalworkField, $finalworkYear,$finalworkPromoter,$workTagID)
     {
-        $work = new Work($finalworkTitle,$finalworkDescription,$finalworkAuthor,$finalworkYear,$promoterID,$workTagID);
+        $work = new Work($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement,$finalworkField,$finalworkYear,$finalworkPromoter,$workTagID);
     }
 
     /**
@@ -50,8 +50,10 @@ class WorkController extends Controller
             'finalworkTitle'=> $request->input('finalworkTitle'),
             'finalworkDescription'=> $request->input('finalworkDescription'),
             'finalworkAuthor'=> $request->input('finalworkAuthor'),
+            'departement' => $request->input('departement'),
+            'finalworkField'=> $request->input('finalworkField'),
             'finalworkYear'=> $request->input('finalworkYear'),
-            'promoterID'=> $request->input('promoterID'),
+            'finalworkPromoter'=> $request->input('finalworkPromoter'),
             'workTagID'=> $request->input('workTagID')
 
         ]);
@@ -127,8 +129,10 @@ class WorkController extends Controller
         'finalworkTitle'=>   $request->input('finalworkTitle'),
         'finalworkDescription'=>  $request->input('finalworkDescription'),
         'finalworkAuthor'=>  $request->input('finalworkAuthor'),
+        'departement' => $request->input('departement'),
+        'finalworkField' => $request->input('finalworkField'),
         'finalworkYear'=>  $request->input('finalworkYear'),
-        'promoterID'=>  $request->input('promoterID'),
+        'finalworkPromoter'=>  $request->input('finalworkPromoter'),
         'workTagID'=> $request->input('workTagID')
         ]);
 
@@ -156,20 +160,41 @@ class WorkController extends Controller
      
         $works = (new Work)->newQuery();
 
-        // Search for a user based on their name.
+        // Search for a finalwork based on departement.
         if ($request->has('departement')) {
             $works->where('departement', $request->Input('departement'));
         }
 
-        // Search for a user based on their company.
+        // Search for a finalwork based on year.
         if ($request->has('year')) {
             $works->where('finalworkYear',$request->input('year'));
         }
 
-        // Search for a user based on their city.
-        if ($request->has('city')) {
-            $works->where('city', $request->input('city'));
+        // Search for a finalwork based on field of study.
+        if ($request->has('field')) {
+            $works->where('finalworkField', $request->input('field'));
         }
+        // Search for a finalwork based on promoter.
+        if ($request->has('promoter')) {
+            $works->where('finalworkPromoter', $request->input('promoter'));
+        }
+
+         // Search for a finalwork based on maximum year.
+         if ($request->has('maxYear')) {
+            $works->where('finalworkYear', '<=', $request->input('maxYear'));
+        }
+
+        // Search for a finalwork based on maximum year.
+        if ($request->has('minYear')) {
+            $works->where('finalworkYear', '>=', $request->input('minYear'));
+        }
+
+        if ($request->has('keyword')) {
+            $works->join('works', 'works.finalworkID', '=', 'work_tags.work_id');
+            $works->join('work_tags', 'work_tags.tag_id', '=', 'tag.id');
+            $works->where('tags.tag', '=', $request->input('keyword'));
+        }
+        
 
         // Get the results and return them.
         return $works->get();

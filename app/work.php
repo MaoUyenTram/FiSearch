@@ -2,16 +2,16 @@
 
 namespace App;
 
-
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Work extends Model
+class Work extends Eloquent /*Model*/
 {
     protected $primaryKey = 'finalworkID';
 
     protected $fillable = [
-       'finalworkTitle','finalworkDescription','finalworkAuthor','departement','finalworkYear','promoterID', 'workTagID'
+       'finalworkTitle','finalworkDescription','finalworkAuthor','departement','finalworkField','finalworkYear','finalworkPromoter', 'workTagID'
 
     ];
 
@@ -22,7 +22,7 @@ class Work extends Model
     }
 
     public function tags(){
-    return $this->belongsToMany('Tags','work_tags','work_id','tags_id');
-}
+    return $this->belongsToMany('App\Tags','work_tags','work_id','tag_id');
+    }
 
 }

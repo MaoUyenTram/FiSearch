@@ -8,8 +8,9 @@ $factory->define(App\Work::class, function (Faker $faker) {
         'finalworkDescription'=> $faker->text,
         'finalworkAuthor'=> $faker->name,
         'departement'=> $faker->name,
+        'finalworkField'=> $faker->name,
         'finalworkYear'=> $faker->year,
-        'promoterID'=> $faker->randomDigitNotNull,
+        'finalworkPromoter'=> $faker->name,
         'workTagID'=> $faker->randomDigitNotNull
     ];
 });

@@ -2,10 +2,13 @@
 
 namespace App;
 
+use Eloquent;
 use Illuminate\Database\Eloquent\Model;
 
-class Tags extends Model
+class Tags extends Eloquent /*Model*/
 {
+    protected $primaryKey = 'id';
+
     protected $fillable = [
         'tag',
     ];
@@ -13,6 +16,6 @@ class Tags extends Model
     protected $table = 'tags';
 
     public function works(){
-        return $this->belongsToMany('Tags','work_tags','tags_id','work_id');
+        return $this->belongsToMany('App\Works','work_tags','work_id','finalworkID');
     }
 }

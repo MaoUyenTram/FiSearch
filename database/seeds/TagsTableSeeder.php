@@ -11,10 +11,6 @@ class TagsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tags')->insert([
-            'tag' =>'test',
-        ]);
-
         factory(App\Tags::class, 5)->create();
 
     }
