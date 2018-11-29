@@ -11,7 +11,7 @@ class Work extends Eloquent /*Model*/
     protected $primaryKey = 'finalworkID';
 
     protected $fillable = [
-       'finalworkTitle','finalworkDescription','finalworkAuthor','departement','finalworkField','finalworkYear','finalworkPromoter', 'workTagID'
+       'finalworkTitle','finalworkDescription','finalworkAuthor','departement','finalworkField','finalworkYear','finalworkPromoter'
 
     ];
 

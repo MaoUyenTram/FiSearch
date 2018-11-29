@@ -32,9 +32,9 @@ class WorkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement, $finalworkField, $finalworkYear,$finalworkPromoter,$workTagID)
+    public function create($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement, $finalworkField, $finalworkYear,$finalworkPromoter)
     {
-        $work = new Work($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement,$finalworkField,$finalworkYear,$finalworkPromoter,$workTagID);
+        $work = new Work($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement,$finalworkField,$finalworkYear,$finalworkPromoter);
     }
 
     /**
@@ -53,8 +53,7 @@ class WorkController extends Controller
             'departement' => $request->input('departement'),
             'finalworkField'=> $request->input('finalworkField'),
             'finalworkYear'=> $request->input('finalworkYear'),
-            'finalworkPromoter'=> $request->input('finalworkPromoter'),
-            'workTagID'=> $request->input('workTagID')
+            'finalworkPromoter'=> $request->input('finalworkPromoter')
 
         ]);
         
@@ -190,9 +189,10 @@ class WorkController extends Controller
         }
 
         if ($request->has('keyword')) {
-            $works->join('work_tags', 'works.workTagID', '=', 'work_tags.work_id');
+            $keyword = $request->input('keyword');
+            $works->join('work_tags', 'works.finalworkID', '=', 'work_tags.work_id');
             $works->join('tags', 'work_tags.tag_id', '=', 'tags.id');
-            $works->where('tags.tag', '=', $request->input('keyword'));
+            $works->where('tags.tag', 'LIKE', '%'.$keyword.'%');
         }
         
 

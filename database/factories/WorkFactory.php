@@ -10,7 +10,6 @@ $factory->define(App\Work::class, function (Faker $faker) {
         'departement'=> $faker->name,
         'finalworkField'=> $faker->name,
         'finalworkYear'=> $faker->year,
-        'finalworkPromoter'=> $faker->name,
-        'workTagID'=> $faker->randomDigitNotNull
+        'finalworkPromoter'=> $faker->name
     ];
 });

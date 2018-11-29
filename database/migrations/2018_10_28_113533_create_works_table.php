@@ -21,13 +21,7 @@ class CreateWorksTable extends Migration
             $table->string('departement');
             $table->string('finalworkField');
             $table->integer('finalworkYear');
-
-            // laat die indexes maar da gaat toch errors geven
-            // ge moet nu wel nog een table maken voor promoters
-            // na composer install enz (.env maken etc)
             $table->string('finalworkPromoter');
-            
-            $table->integer('workTagID');
 
             $table->timestamps();
 
