@@ -21,7 +21,7 @@ Route::get('/search', function () {
     return 'Zoekalgoritme komt hier';
 });
 
-Route::post('/upload', 'UploadController');
+Route::post('/upload', 'UploadController')->middleware('api', 'cors');
 
 Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
 

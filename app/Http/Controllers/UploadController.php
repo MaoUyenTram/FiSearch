@@ -21,6 +21,7 @@ class UploadController extends Controller
         $name = $request->file('pdf')->getClientOriginalName();
         $request->file('pdf')->move(public_path('pdf'),$name);
         $text = preg_replace('~[\\\\/:*?"<>|]~', '', $pdf->getText());
+        $limited_text = substr($text, 0, 4900);
 
         $client = new Client();
 
@@ -35,7 +36,7 @@ class UploadController extends Controller
                     [
                         'language' => 'nl',
                         'id' => '1',
-                        'text' => $text,
+                        'text' => $limited_text,
                     ],
                 ]
             ]
