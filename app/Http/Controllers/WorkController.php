@@ -190,8 +190,8 @@ class WorkController extends Controller
         }
 
         if ($request->has('keyword')) {
-            $works->join('works', 'works.finalworkID', '=', 'work_tags.work_id');
-            $works->join('work_tags', 'work_tags.tag_id', '=', 'tag.id');
+            $works->join('work_tags', 'works.workTagID', '=', 'work_tags.work_id');
+            $works->join('tags', 'work_tags.tag_id', '=', 'tags.id');
             $works->where('tags.tag', '=', $request->input('keyword'));
         }
         
