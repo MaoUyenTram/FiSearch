@@ -190,13 +190,16 @@ class WorkController extends Controller
 
         if ($request->has('keyword')) {
             $keyword = $request->input('keyword');
-            $works->join('work_tags', 'works.finalworkID', '=', 'work_tags.work_id');
-            $works->join('tags', 'work_tags.tag_id', '=', 'tags.id');
-            $works->where('tags.tag', 'LIKE', '%'.$keyword.'%');
+
+            $works->orWhere('finalworkTitle', 'LIKE', "%{$keyword}%"); 
+
+            $works->whereTagsLike($keyword);
+        } else {
+            $works->with('tags');
         }
         
-
         // Get the results and return them.
+
         return $works->get();
     }
 }
