@@ -131,8 +131,7 @@ class WorkController extends Controller
         'departement' => $request->input('departement'),
         'finalworkField' => $request->input('finalworkField'),
         'finalworkYear'=>  $request->input('finalworkYear'),
-        'finalworkPromoter'=>  $request->input('finalworkPromoter'),
-        'workTagID'=> $request->input('workTagID')
+        'finalworkPromoter'=>  $request->input('finalworkPromoter')
         ]);
 
         $work->save();
@@ -158,6 +157,16 @@ class WorkController extends Controller
     {
      
         $works = (new Work)->newQuery();
+
+        if ($request->has('keyword')) {
+            $keyword = $request->input('keyword');
+
+            $works->where('finalworkTitle', 'LIKE', "%{$keyword}%"); 
+            $works->whereTagsLike($keyword);
+
+        } else {
+           $works->with('tags');
+        }
 
         // Search for a finalwork based on departement.
         if ($request->has('departement')) {
@@ -188,15 +197,7 @@ class WorkController extends Controller
             $works->where('finalworkYear', '>=', $request->input('minYear'));
         }
 
-        if ($request->has('keyword')) {
-            $keyword = $request->input('keyword');
-
-            $works->orWhere('finalworkTitle', 'LIKE', "%{$keyword}%"); 
-
-            $works->whereTagsLike($keyword);
-        } else {
-            $works->with('tags');
-        }
+       
         
         // Get the results and return them.
 

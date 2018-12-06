@@ -22,7 +22,8 @@ class Work extends Eloquent /*Model*/
     }
 
     public function tags(){
-    return $this->belongsToMany('App\Tags','work_tags','work_id','tag_id');
+        return $this->belongsToMany('App\Tags','work_tags','work_id','tag_id');
+        
     }
 
     public function scopeWhereTagsLike($query, $keyword) {

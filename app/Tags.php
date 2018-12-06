@@ -17,6 +17,7 @@ class Tags extends Eloquent /*Model*/
     protected $table = 'tags';
 
     public function works(){
-        return $this->belongsToMany(Work::class,'work_tags','work_id','finalworkID');
+        return $this->belongsToMany('App\Work','work_tags','work_id','tag_id'); //finalworkID ipv tag_id
     }
+
 }
