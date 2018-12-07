@@ -156,7 +156,7 @@ class WorkController extends Controller
     public function filter(Request $request, Work $work)
     {
      
-        $works = (new Work)->newQuery();
+        $works = (new Work)->newQuery()->with('tags');
 
         if ($request->has('keyword')) {
             $keyword = $request->input('keyword');
@@ -164,9 +164,7 @@ class WorkController extends Controller
             $works->where('finalworkTitle', 'LIKE', "%{$keyword}%"); 
             $works->whereTagsLike($keyword);
 
-        } else {
-           $works->with('tags');
-        }
+        } 
 
         // Search for a finalwork based on departement.
         if ($request->has('departement')) {
@@ -197,8 +195,6 @@ class WorkController extends Controller
             $works->where('finalworkYear', '>=', $request->input('minYear'));
         }
 
-       
-        
         // Get the results and return them.
 
         return $works->get();

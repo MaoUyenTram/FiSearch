@@ -27,9 +27,9 @@ class Work extends Eloquent /*Model*/
     }
 
     public function scopeWhereTagsLike($query, $keyword) {
-        return $query->with(['tags' => function($q) use($keyword) {
-            $q->orWhere('tag', 'LIKE', "%{$keyword}%");
-        }]);
+        return $query->orWhereHas('tags', function($q) use($keyword) {
+            $q->where('tag', 'LIKE', "%{$keyword}%");
+        });
     }
 
 }
