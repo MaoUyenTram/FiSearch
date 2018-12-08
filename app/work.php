@@ -31,5 +31,5 @@ class Work extends Eloquent /*Model*/
             $q->where('tag', 'LIKE', "%{$keyword}%");
         });
     }
-
+    
 }
