@@ -32,3 +32,7 @@ Route::get('works/by_departement/{departement}', 'WorkController@showByDeparteme
 Route::get('/pdftoimage', 'PdfToImageController');
 
 Route::get('/filter', 'WorkController@filter');
+
+Route::middleware('auth:api')->get('/user', function (Request $request){
+    return $request->user();
+});
