@@ -15,7 +15,8 @@
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0",
         "smalot/pdfparser": "^0.13.2",
-        "spatie/pdf-to-text": "^1.1"
+        "spatie/pdf-to-text": "^1.1",
+        "willvincent/laravel-rateable": "^1.07"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

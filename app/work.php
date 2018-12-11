@@ -3,11 +3,14 @@
 namespace App;
 
 use Eloquent;
+use willvincent\Rateable\Rateable;
 use Illuminate\Database\Eloquent\Model;
 
 
 class Work extends Eloquent /*Model*/
 {
+    use Rateable;
+
     protected $primaryKey = 'finalworkID';
 
     protected $fillable = [

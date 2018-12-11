@@ -86,7 +86,13 @@ class WorkController extends Controller
      */
     public function show($id)
     {
-        return $this->firstOrResponse('finalworkID', $id);
+        $work = Work::with('tags')->where('finalworkID', '=', $id)->firstOrFail();
+
+        //dd($work);
+
+        return new WorkResource($work);
+
+        //return $this->firstOrResponse('finalworkID', $id);
     }
 
     public function showByTitle($title)
