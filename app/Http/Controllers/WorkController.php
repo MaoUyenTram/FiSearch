@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Tags;
 use Illuminate\Http\Request;
 use App\Work;
 use App\Http\Resources\WorkResource;
+use App\Http\Resources\TagResource;
 use Illuminate\Support\Facades\Input;
 
 use App\Http\Requests;
@@ -54,12 +56,23 @@ class WorkController extends Controller
             'finalworkField'=> $request->input('finalworkField'),
             'finalworkYear'=> $request->input('finalworkYear'),
             'finalworkPromoter'=> $request->input('finalworkPromoter')
-
         ]);
         
         $work->save();
 
-        return new WorkResource($work);
+        if($request->exists("tags")){
+            foreach ( $request->input("tags") as $arr){
+                $thetag = (new Tags)->fill([
+                    'tag'=> $arr['tag']
+                ]);
+                $thetag->save();
+                Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
+            }
+        }
+
+        return new TagResource($thetag);
+        //return print_r($thetag);
+        //return new WorkResource($work);
     }
 
     public function firstOrResponse($field, $value) {

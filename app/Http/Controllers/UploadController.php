@@ -20,6 +20,7 @@ class UploadController extends Controller
         $parser = new Parser();
         $pdf = $parser->parseFile($request->file('pdf'));
         $details = $pdf->getDetails();
+        return var_dump($details);
         $request->file('pdf')->move(public_path('pdf'),"file.pdf");
         //$text = mb_strtolower($pdf->getText());
         $text = str_replace('.', '', mb_strtolower($pdf->getText()));

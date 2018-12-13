@@ -22,6 +22,7 @@ Route::get('/search', function () {
 });
 
 Route::post('/upload', 'UploadController')->middleware('api', 'cors');
+Route::post('/massupload', 'MassController')->middleware('api', 'cors');
 Route::post('/confirm', 'WorkController@store')->middleware('api', 'cors');
 
 Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
