@@ -17,6 +17,8 @@ use App\Work;
 use App\Http\Resources\WorkResource;
 use App\Http\Resources\TagResource;
 use App\Http\Requests;
+use ZanySoft\Zip\Zip;
+
 
 class MassController extends Controller
 {
@@ -28,12 +30,17 @@ class MassController extends Controller
      */
     public function __invoke(Request $request)
     {
-        foreach ($request->allFiles() as $pdfs) {
+        $zip = Zip::open($request->file('zip'));
+        $zip->extract(public_path('pdf'));
+        //return var_dump($zip->listFiles());
+        foreach ($zip->listFiles() as $pdfs) {
+        //foreach ($request->allFiles() as $pdfs) {
             $parser = new Parser();
-            $pdf = $parser->parseFile($pdfs);
+            $pdf = $parser->parseFile(public_path('pdf/').$pdfs);
             $details = $pdf->getDetails();
-            $pdfs->move(public_path('pdf'),$details['Title'].$details['Author'].".pdf");
-            $text = str_replace('.', '', mb_strtolower($pdf->getText()));
+            //$pdfs->move(public_path('pdf'));
+            //$text = str_replace('.', '', mb_strtolower($pdf->getText()));
+            $text = mb_strtolower($pdf->getText());
             $cutf = strpos($text, "index");
             if (!$cutf) {
                 $cutf = strpos($text, "table of content");

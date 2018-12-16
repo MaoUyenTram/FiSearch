@@ -151,7 +151,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        ZanySoft\Zip\ZipServiceProvider::class,
         /*
          * Application Service Providers...
          */
