@@ -30,8 +30,12 @@ Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
 
 Route::resource('works', 'WorkController');
 Route::get('works/by_title/{title}', 'WorkController@showByTitle')->middleware('api', 'cors');
-Route::get('works/by_departement/{departement}', 'WorkController@showByDepartement');
-Route::get('/pdftoimage', 'PdfToImageController');
+Route::get('works/by_departement/{departement}', 'WorkController@showByDepartement')->middleware('api','cors');
+Route::get('/pdftoimage', 'PdfToImageController')->middleware('api','cors');
 
-Route::get('/filter', 'WorkController@filter');
-Route::resource('ratings', 'RatingController');
+Route::get('/filter', 'WorkController@filter')->middleware('api','cors');
+Route::resource('ratings', 'RatingController')->middleware('api','cors');
+
+
+//Route::get('/annotate', 'AnnotationController@displayForm')->middleware('api','cors');
+//Route::post('/annotate', 'AnnotationController@annotateImage')->middleware('api','cors');
