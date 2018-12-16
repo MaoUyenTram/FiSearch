@@ -16,6 +16,7 @@ use App\Tags;
 use App\Work;
 use App\Http\Resources\WorkResource;
 use App\Http\Resources\TagResource;
+use App\Http\Requests;
 
 class MassController extends Controller
 {
@@ -31,10 +32,8 @@ class MassController extends Controller
             $parser = new Parser();
             $pdf = $parser->parseFile($pdfs);
             $details = $pdf->getDetails();
-            $pdfs->move(public_path('pdf'), "file.pdf");
-            //$text = mb_strtolower($pdf->getText());
+            $pdfs->move(public_path('pdf'),$details['Title'].$details['Author'].".pdf");
             $text = str_replace('.', '', mb_strtolower($pdf->getText()));
-            //$text = mb_convert_encoding($text, "UTF-8");
             $cutf = strpos($text, "index");
             if (!$cutf) {
                 $cutf = strpos($text, "table of content");
@@ -42,12 +41,8 @@ class MassController extends Controller
             if (!$cutf) {
                 $cutf = strpos($text, "inhouds");
             }
-            if (!$cutf) {
-                //return "error no table of contents/inhoudstafel/index";
-            }
             $rftext = substr($text, $cutf);
             $limited_text = substr($rftext, 5, 4800);
-            //return $limited_text;
             $client = new Client();
 
             $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
@@ -93,12 +88,18 @@ class MassController extends Controller
             $work->save();
 
 
-            foreach ($tags["documents"][0]["keyPhrases"] as $key=>$val) {
-                $thetag = (new Tags)->fill([
-                    'tag' => $val
-                ]);
-                $thetag->save();
-                Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
+            foreach ($tags["documents"][0]["keyPhrases"] as $key => $val) {
+                $taglist = Tags::where("tag", $val)->first();
+                if ($taglist != null) {
+                    $tagid = $taglist->toArray()["id"];
+                    Work::orderBy('created_at', 'desc')->first()->tags()->attach($tagid);
+                } else {
+                    $thetag = (new Tags)->fill([
+                        'tag' => $val
+                    ]);
+                    $thetag->save();
+                    Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
+                }
             }
 
 

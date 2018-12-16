@@ -19,9 +19,9 @@ class UploadController extends Controller
     {
         $parser = new Parser();
         $pdf = $parser->parseFile($request->file('pdf'));
+        $name = $request->file('pdf')->getClientOriginalName();
         $details = $pdf->getDetails();
-        return var_dump($details);
-        $request->file('pdf')->move(public_path('pdf'),"file.pdf");
+        $request->file('pdf')->move(public_path('pdf'),$name);
         //$text = mb_strtolower($pdf->getText());
         $text = str_replace('.', '', mb_strtolower($pdf->getText()));
         //$text = mb_convert_encoding($text, "UTF-8");
@@ -63,10 +63,10 @@ class UploadController extends Controller
         $result = ConvertApi::convert(
             'jpg',
             [
-                'File' => 'pdf/file.pdf',
+                'File' => 'pdf/'.$name,
                 'PageRange' => '1',
             ], 'pdf');
-        $result->getFile()->save('pdf/test.jpg');
+        $result->getFile()->save('pdf/'.$name.'.jpg');
         $img = $result->getFile()->getUrl();
 
         return array(
