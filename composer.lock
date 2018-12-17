@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ade2db4990c6d169eb8e1b54af0e2058",
+    "content-hash": "d69a3582b2d412c1e56fbf68c0c232cd",
     "packages": [
         {
             "name": "barryvdh/laravel-ide-helper",
@@ -4826,6 +4826,48 @@
             "time": "2018-07-29T20:33:41+00:00"
         },
         {
+            "name": "wapnen/google-cloud-vision-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wapnen/google-cloud-vision-php.git",
+                "reference": "1c2638e7d0e9e0eebdc7b1f685190ffadd8b151f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wapnen/google-cloud-vision-php/zipball/1c2638e7d0e9e0eebdc7b1f685190ffadd8b151f",
+                "reference": "1c2638e7d0e9e0eebdc7b1f685190ffadd8b151f",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.3"
+            },
+            "type": "package",
+            "autoload": {
+                "psr-4": {
+                    "GoogleCloudVision\\": "GoogleCloudVision/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Wapnen Gowok",
+                    "email": "wapneng@gmail.com"
+                }
+            ],
+            "description": "A simple php library for the google cloud vision API ",
+            "keywords": [
+                "Computer Vision",
+                "google cloud vision api",
+                "machine learning",
+                "php"
+            ],
+            "time": "2018-12-15T11:25:12+00:00"
+        },
+        {
             "name": "willvincent/laravel-rateable",
             "version": "1.07",
             "source": {
@@ -6769,7 +6811,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "wapnen/google-cloud-vision-php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

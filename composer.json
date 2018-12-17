@@ -17,6 +17,7 @@
         "laravel/tinker": "^1.0",
         "smalot/pdfparser": "^0.13.2",
         "spatie/pdf-to-text": "^1.1",
+        "wapnen/google-cloud-vision-php": "dev-master",
         "willvincent/laravel-rateable": "^1.07",
         "zanysoft/laravel-zip": "^1.0"
     },

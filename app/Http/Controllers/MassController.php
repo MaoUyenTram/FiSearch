@@ -80,12 +80,12 @@ class MassController extends Controller
                     'File' => 'pdf/file.pdf',
                     'PageRange' => '1',
                 ], 'pdf');
-            $result->getFile()->save('pdf/'.$pdfs.'.jpg');
+            $result->getFile()->save('pdf/'.substr($pdfs,0,-4).'.jpg');
             $img = $result->getFile()->getUrl();
 
 
             $request = new AnnotateImageRequest();
-            $request->setImage(base64_encode(public_path('pdf/').$pdfs));
+            $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($pdfs,0,-4).'.jpg')));
             $request->setFeature("TEXT_DETECTION");
             $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
             //send annotation request
@@ -114,6 +114,7 @@ class MassController extends Controller
             $details = ["Name" => $name, "Title" => $title, 'Year' => $year, 'School' => $school , 'Promoter 1' => $promoter1, 'Promoter 2' => $promoter2];
 
             $work = (new Work)->fill([
+                'finalworkURL' => $img,
                 'finalworkTitle' => $details['Title'],
                 'finalworkDescription' => "",
                 'finalworkAuthor' => $details['Name'],

@@ -67,11 +67,11 @@ class UploadController extends Controller
                 'File' => 'pdf/'.$name,
                 'PageRange' => '1',
             ], 'pdf');
-        $result->getFile()->save('pdf/'.$name.'.jpg');
+        $result->getFile()->save('pdf/'.substr($name,0,-4).'.jpg');
         $img = $result->getFile()->getUrl();
 
         $request = new AnnotateImageRequest();
-        $request->setImage(base64_encode(public_path('pdf/').$name));
+        $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($name,0,-4).'.jpg')));
         $request->setFeature("TEXT_DETECTION");
         $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
         //send annotation request
