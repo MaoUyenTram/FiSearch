@@ -7,6 +7,7 @@
     "require": {
         "php": "^7.1.3",
         "ext-json": "^1.5",
+        "anouar/fpdf": "^2.0",
         "barryvdh/laravel-ide-helper": "^2.5",
         "convertapi/convertapi-php": "^1.1",
         "fideloper/proxy": "^4.0",
@@ -15,6 +16,8 @@
         "laravel/framework": "5.7.*",
         "laravel/passport": "^7.0",
         "laravel/tinker": "^1.0",
+        "setasign/fpdi": "^2.1",
+        "setasign/fpdi-fpdf": "^2.1",
         "smalot/pdfparser": "^0.13.2",
         "spatie/pdf-to-text": "^1.1",
         "wapnen/google-cloud-vision-php": "dev-master",

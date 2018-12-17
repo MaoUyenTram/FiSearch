@@ -7,11 +7,6 @@ use Illuminate\Http\Request;
 use App\Work;
 use App\Http\Resources\WorkResource;
 use App\Http\Resources\TagResource;
-use Illuminate\Support\Facades\Input;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 
 class WorkController extends Controller
 {

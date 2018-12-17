@@ -19,28 +19,44 @@ class UploadController extends Controller
      */
     public function __invoke(Request $request)
     {
+        $pdfName = $this->storePdfFile($request);
+        $parsedPdf = $this->parsePdfFile($request);
+        $tableOfContents = $this->getTableOfContents($parsedPdf);
+        $keywords = $this->getKeywords($tableOfContents);
+        $coverPage = $this->convertPdfToImage($pdfName);
+        $details = $this->analyseCoverPage();
+
+        return json_encode(array('tags' => $keywords, 'img' =>  $coverPage, 'details' => $details));
+    }
+
+    private function storePdfFile($request) {
+        $name = $request->file('pdf')->getClientOriginalName();
+        $request->file('pdf')->move(public_path('pdf'),$name);
+        return $name;
+    }
+
+    private function parsePdfFile($request) {
         $parser = new Parser();
         $pdf = $parser->parseFile($request->file('pdf'));
-        $name = $request->file('pdf')->getClientOriginalName();
-        //$details = $pdf->getDetails();
-        $request->file('pdf')->move(public_path('pdf'),$name);
-        $text = mb_strtolower($pdf->getText());
-        //$text = str_replace('.', '', mb_strtolower($pdf->getText()));
-        $cutf = strpos($text, "index");
-        if (!$cutf) {
-            $cutf = strpos($text, "table of content");
-        }
-        if (!$cutf) {
-            $cutf = strpos($text, "inhouds");
-        }
-        /*if (!$cutf) {
-            return "error no table of contents/inhoudstafel/index";
-        }*/
-        $rftext = substr($text,$cutf);
-        $limited_text = substr($rftext, 5,4800);
-        //return $limited_text;
-        $client = new Client();
+        return mb_strtolower($pdf->getText());
 
+    }
+
+    private function getTableOfContents($pdf) {
+        $register = ["index", "table of contents", "inhoudstafel", "table of content", "inhouds"];
+        foreach ($register as $word) {
+            $tablePosition = strpos($pdf, $word);
+            if ($tablePosition != null) {
+                break;
+            }
+        }
+        $tableBeginning = substr($pdf,$tablePosition);
+        $limitedTable = substr($tableBeginning, 0,4800);
+        return $limitedTable;
+    }
+
+    private function getKeywords($table) {
+        $client = new Client();
         $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
             'headers' => [
                 'Ocp-Apim-Subscription-Key' => 'c9081ce68d9541cba44b8b78684e8ce5',
@@ -52,13 +68,15 @@ class UploadController extends Controller
                     [
                         'language' => 'nl',
                         'id' => '1',
-                        'text' => $limited_text,
+                        'text' => $table,
                     ],
                 ]
             ]
         ]);
-        $tags = json_decode($response->getBody(),true);
+        return json_decode($response->getBody(),true);
+    }
 
+    private function convertPdfToImage($name) {
         $secret = "lTv3cVFVsvFRY3Nf";
         ConvertApi::setApiSecret($secret);
         $result = ConvertApi::convert(
@@ -68,18 +86,18 @@ class UploadController extends Controller
                 'PageRange' => '1',
             ], 'pdf');
         $result->getFile()->save('pdf/'.substr($name,0,-4).'.jpg');
-        $img = $result->getFile()->getUrl();
+        return $result->getFile()->getUrl();
+    }
 
+    private function analyseCoverPage() {
         $request = new AnnotateImageRequest();
         $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($name,0,-4).'.jpg')));
         $request->setFeature("TEXT_DETECTION");
         $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
-        //send annotation request
         $response = $gcvRequest->annotate();
-
-        $arr = explode("\n", $response->responses[0]->textAnnotations[0]->description);
-        $name = $arr[0];
-        foreach ($arr as $key => $value) {
+        $responseArray = explode("\n", $response->responses[0]->textAnnotations[0]->description);
+        $name = $responseArray[0];
+        foreach ($response as $key => $value) {
             if (strpos($value, '20') !== false) {
                 $year = $value;
                 $year_key = $key;
@@ -87,24 +105,13 @@ class UploadController extends Controller
 
         }
         $title = "";
-        for ($i=1; $i < $year_key ; $i++) {
-            $title .= $arr[$i];
+        for ($i = 0; $i < $year_key; $i++) {
+            $title .= $responseArray[$key];
         }
+        $school = $responseArray[$year_key +1];
+        $promotor1 = $responseArray[$year_key +2];
+        $promotor2 = $responseArray[$year_key +3];
 
-        $school = $arr [$year_key +1];
-
-        $promoter1 = $arr [$year_key +2];
-
-        $promoter2 = $arr [$year_key +3];
-
-        $details = ["Name" => $name, "Title" => $title, 'Year' => $year, 'School' => $school , 'Promoter 1' => $promoter1, 'Promoter 2' => $promoter2];
-
-        return array(
-            'tags' => $tags,
-            'img' =>  $img,
-            'details' => $details,
-        );
-
-
+        return ["name" => $name, "title" => $title, 'year' => $year, 'school' => $school , 'promotor1' => $promotor1, 'promotor2' => $promotor2];
     }
 }
