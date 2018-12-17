@@ -18,6 +18,8 @@ use App\Http\Resources\WorkResource;
 use App\Http\Resources\TagResource;
 use App\Http\Requests;
 use ZanySoft\Zip\Zip;
+use GoogleCloudVision\GoogleCloudVision;
+use GoogleCloudVision\Request\AnnotateImageRequest;
 
 
 class MassController extends Controller
@@ -37,7 +39,7 @@ class MassController extends Controller
         //foreach ($request->allFiles() as $pdfs) {
             $parser = new Parser();
             $pdf = $parser->parseFile(public_path('pdf/').$pdfs);
-            $details = $pdf->getDetails();
+            //$details = $pdf->getDetails();
             //$pdfs->move(public_path('pdf'));
             //$text = str_replace('.', '', mb_strtolower($pdf->getText()));
             $text = mb_strtolower($pdf->getText());
@@ -70,7 +72,7 @@ class MassController extends Controller
             ]);
             $tags = json_decode($response->getBody(), true);
 
-            /*$secret = "lTv3cVFVsvFRY3Nf";
+            $secret = "lTv3cVFVsvFRY3Nf";
             ConvertApi::setApiSecret($secret);
             $result = ConvertApi::convert(
                 'jpg',
@@ -78,18 +80,47 @@ class MassController extends Controller
                     'File' => 'pdf/file.pdf',
                     'PageRange' => '1',
                 ], 'pdf');
-            $result->getFile()->save('pdf/test.jpg');
+            $result->getFile()->save('pdf/'.$pdfs.'.jpg');
             $img = $result->getFile()->getUrl();
-            */
+
+
+            $request = new AnnotateImageRequest();
+            $request->setImage(base64_encode(public_path('pdf/').$pdfs));
+            $request->setFeature("TEXT_DETECTION");
+            $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
+            //send annotation request
+            $response = $gcvRequest->annotate();
+
+            $arr = explode("\n", $response->responses[0]->textAnnotations[0]->description);
+            $name = $arr[0];
+            foreach ($arr as $key => $value) {
+                if (strpos($value, '20') !== false) {
+                    $year = $value;
+                    $year_key = $key;
+                }
+
+            }
+            $title = "";
+            for ($i=1; $i < $year_key ; $i++) {
+                $title .= $arr[$i];
+            }
+
+            $school = $arr [$year_key +1];
+
+            $promoter1 = $arr [$year_key +2];
+
+            $promoter2 = $arr [$year_key +3];
+
+            $details = ["Name" => $name, "Title" => $title, 'Year' => $year, 'School' => $school , 'Promoter 1' => $promoter1, 'Promoter 2' => $promoter2];
 
             $work = (new Work)->fill([
                 'finalworkTitle' => $details['Title'],
-                'finalworkDescription' => "een random eindwerk",
-                'finalworkAuthor' => $details['Author'],
-                'departement' => "dig-x",
-                'finalworkField' => "ouderenzorg ofzo",
+                'finalworkDescription' => "",
+                'finalworkAuthor' => $details['Name'],
+                'departement' => $details['School'],
+                'finalworkField' => "",
                 'finalworkYear' => $details["ModDate"],
-                'finalworkPromoter' => "need extraction"
+                'finalworkPromoter' => $details['Promotor 1']
             ]);
 
             $work->save();

@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
 use GuzzleHttp\Client;
 use ConvertApi\ConvertApi;
+use GoogleCloudVision\GoogleCloudVision;
+use GoogleCloudVision\Request\AnnotateImageRequest;
 
 class UploadController extends Controller
 {
@@ -20,11 +22,10 @@ class UploadController extends Controller
         $parser = new Parser();
         $pdf = $parser->parseFile($request->file('pdf'));
         $name = $request->file('pdf')->getClientOriginalName();
-        $details = $pdf->getDetails();
+        //$details = $pdf->getDetails();
         $request->file('pdf')->move(public_path('pdf'),$name);
-        //$text = mb_strtolower($pdf->getText());
-        $text = str_replace('.', '', mb_strtolower($pdf->getText()));
-        //$text = mb_convert_encoding($text, "UTF-8");
+        $text = mb_strtolower($pdf->getText());
+        //$text = str_replace('.', '', mb_strtolower($pdf->getText()));
         $cutf = strpos($text, "index");
         if (!$cutf) {
             $cutf = strpos($text, "table of content");
@@ -32,9 +33,9 @@ class UploadController extends Controller
         if (!$cutf) {
             $cutf = strpos($text, "inhouds");
         }
-        if (!$cutf) {
+        /*if (!$cutf) {
             return "error no table of contents/inhoudstafel/index";
-        }
+        }*/
         $rftext = substr($text,$cutf);
         $limited_text = substr($rftext, 5,4800);
         //return $limited_text;
@@ -68,6 +69,35 @@ class UploadController extends Controller
             ], 'pdf');
         $result->getFile()->save('pdf/'.$name.'.jpg');
         $img = $result->getFile()->getUrl();
+
+        $request = new AnnotateImageRequest();
+        $request->setImage(base64_encode(public_path('pdf/').$name));
+        $request->setFeature("TEXT_DETECTION");
+        $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
+        //send annotation request
+        $response = $gcvRequest->annotate();
+
+        $arr = explode("\n", $response->responses[0]->textAnnotations[0]->description);
+        $name = $arr[0];
+        foreach ($arr as $key => $value) {
+            if (strpos($value, '20') !== false) {
+                $year = $value;
+                $year_key = $key;
+            }
+
+        }
+        $title = "";
+        for ($i=1; $i < $year_key ; $i++) {
+            $title .= $arr[$i];
+        }
+
+        $school = $arr [$year_key +1];
+
+        $promoter1 = $arr [$year_key +2];
+
+        $promoter2 = $arr [$year_key +3];
+
+        $details = ["Name" => $name, "Title" => $title, 'Year' => $year, 'School' => $school , 'Promoter 1' => $promoter1, 'Promoter 2' => $promoter2];
 
         return array(
             'tags' => $tags,

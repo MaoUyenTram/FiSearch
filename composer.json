@@ -10,6 +10,7 @@
         "barryvdh/laravel-ide-helper": "^2.5",
         "convertapi/convertapi-php": "^1.1",
         "fideloper/proxy": "^4.0",
+        "google/cloud-vision": "^0.19.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "5.7.*",
         "laravel/passport": "^7.0",
