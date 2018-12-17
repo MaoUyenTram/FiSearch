@@ -34,9 +34,9 @@ class WorkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement, $finalworkField, $finalworkYear,$finalworkPromoter)
+    public function create($finalworkURL,$finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement, $finalworkField, $finalworkYear,$finalworkPromoter)
     {
-        $work = new Work($finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement,$finalworkField,$finalworkYear,$finalworkPromoter);
+        $work = new Work($finalworkURL,$finalworkTitle,$finalworkDescription,$finalworkAuthor,$departement,$finalworkField,$finalworkYear,$finalworkPromoter);
     }
 
     /**
@@ -49,6 +49,7 @@ class WorkController extends Controller
     public function store(Request $request)
     {
             $work = (new Work)->fill([
+            'finalworkURL'=> $request->input('finalworkURL'),
             'finalworkTitle'=> $request->input('finalworkTitle'),
             'finalworkDescription'=> $request->input('finalworkDescription'),
             'finalworkAuthor'=> $request->input('finalworkAuthor'),
@@ -144,6 +145,7 @@ class WorkController extends Controller
         $work = Work::where('finalworkID', '=', $id)->firstOrFail();
 
         $work->update([
+        'finalworkURL'=>   $request->input('finalworkURL'),
         'finalworkTitle'=>   $request->input('finalworkTitle'),
         'finalworkDescription'=>  $request->input('finalworkDescription'),
         'finalworkAuthor'=>  $request->input('finalworkAuthor'),

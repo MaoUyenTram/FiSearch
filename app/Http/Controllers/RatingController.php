@@ -17,14 +17,13 @@ class RatingController extends Controller
     // rating geven
     public function store(Request $request)
     {
-        // doe dit weg later
-        Auth::login(User::first()); // $request->user()->id;
+        //Auth::login(User::first()); // $request->user()->id;
 
         $userId = $request->user()->id;
 
         $work = $this->getWorkById($request->input('finalworkID'));
 
-        // checken dat user_id not niet bestaat
+        // checken dat user_id nog niet bestaat
         if ($work->ratings->contains(function(Rating $rating) use($userId) { 
             return (int)($rating->user_id) === (int)$userId;
         })) {

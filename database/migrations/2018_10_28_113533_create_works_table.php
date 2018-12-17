@@ -15,6 +15,7 @@ class CreateWorksTable extends Migration
     {
             Schema::create('works', function (Blueprint $table) {
             $table->increments('finalworkID'); //finalworkID
+            $table->string('finalworkURL');
             $table->string('finalworkTitle');
             $table->string('finalworkDescription');
             $table->string('finalworkAuthor');
