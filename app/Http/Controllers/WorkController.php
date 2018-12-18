@@ -177,9 +177,12 @@ class WorkController extends Controller
         if ($request->has('keyword')) {
             $keyword = $request->input('keyword');
 
-            $works->where('finalworkTitle', 'LIKE', "%{$keyword}%"); 
-            $works->orWhere('finalworkDescription', 'LIKE',"%{$keyword}%");
-            $works->whereTagsLike($keyword);
+            $keywords = explode(" ", $keyword);
+            for ($i = 0; $i < count($keywords); $i++) {
+                $works->where('finalworkTitle', 'LIKE', "%{$keywords[$i]}%");
+                $works->orWhere('finalworkDescription', 'LIKE',"%{$keywords[$i]}%");
+                $works->whereTagsLike($keywords[$i]);
+            }
         } 
 
         // Search for a final work based on department.
