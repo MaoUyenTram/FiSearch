@@ -75,15 +75,15 @@ class MassController extends Controller
 
     private function storePdfFile($pdfnames) {
         do {
-            $name = uniqid()."pdf";
+            $name = uniqid().".pdf";
         } while (file_exists(public_path('pdf').$name));
-        rename($pdfnames,$name);
+        rename(public_path('pdf/').$pdfnames,public_path('pdf/').$name);
         return $name;
     }
 
     private function parsePdfFile($pdfName) {
         $parser = new Parser();
-        $pdf = $parser->parseFile(public_path('pdf').$pdfName);
+        $pdf = $parser->parseFile(public_path('pdf/').$pdfName);
         return mb_strtolower($pdf->getText());
 
     }

@@ -31,9 +31,9 @@ class UploadController extends Controller
 
     private function storePdfFile($request) {
         do {
-            $name = uniqid();
-        } while (file_exists(public_path('pdf').$name.".pdf"));
-        $request->file('pdf')->move(public_path('pdf'),$name.".pdf");
+            $name = uniqid().".pdf";
+        } while (file_exists(public_path('pdf').$name));
+        $request->file('pdf')->move(public_path('pdf'),$name);
         return $name;
     }
 
