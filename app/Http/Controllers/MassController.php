@@ -34,87 +34,16 @@ class MassController extends Controller
     {
         $zip = Zip::open($request->file('zip'));
         $zip->extract(public_path('pdf'));
-        //return var_dump($zip->listFiles());
-        foreach ($zip->listFiles() as $pdfs) {
-        //foreach ($request->allFiles() as $pdfs) {
-            $parser = new Parser();
-            $pdf = $parser->parseFile(public_path('pdf/').$pdfs);
-            //$details = $pdf->getDetails();
-            //$pdfs->move(public_path('pdf'));
-            //$text = str_replace('.', '', mb_strtolower($pdf->getText()));
-            $text = mb_strtolower($pdf->getText());
-            $cutf = strpos($text, "index");
-            if (!$cutf) {
-                $cutf = strpos($text, "table of content");
-            }
-            if (!$cutf) {
-                $cutf = strpos($text, "inhouds");
-            }
-            $rftext = substr($text, $cutf);
-            $limited_text = substr($rftext, 5, 4800);
-            $client = new Client();
-
-            $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
-                'headers' => [
-                    'Ocp-Apim-Subscription-Key' => 'c9081ce68d9541cba44b8b78684e8ce5',
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json'
-                ],
-                'json' => [
-                    'documents' => [
-                        [
-                            'language' => 'nl',
-                            'id' => '1',
-                            'text' => $limited_text,
-                        ],
-                    ]
-                ]
-            ]);
-            $tags = json_decode($response->getBody(), true);
-
-            $secret = "lTv3cVFVsvFRY3Nf";
-            ConvertApi::setApiSecret($secret);
-            $result = ConvertApi::convert(
-                'jpg',
-                [
-                    'File' => 'pdf/file.pdf',
-                    'PageRange' => '1',
-                ], 'pdf');
-            $result->getFile()->save('pdf/'.substr($pdfs,0,-4).'.jpg');
-            $img = $result->getFile()->getUrl();
-
-
-            $request = new AnnotateImageRequest();
-            $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($pdfs,0,-4).'.jpg')));
-            $request->setFeature("TEXT_DETECTION");
-            $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
-            //send annotation request
-            $response = $gcvRequest->annotate();
-
-            $arr = explode("\n", $response->responses[0]->textAnnotations[0]->description);
-            $name = $arr[0];
-            foreach ($arr as $key => $value) {
-                if (strpos($value, '20') !== false) {
-                    $year = $value;
-                    $year_key = $key;
-                }
-
-            }
-            $title = "";
-            for ($i=1; $i < $year_key ; $i++) {
-                $title .= $arr[$i];
-            }
-
-            $school = $arr [$year_key +1];
-
-            $promoter1 = $arr [$year_key +2];
-
-            $promoter2 = $arr [$year_key +3];
-
-            $details = ["Name" => $name, "Title" => $title, 'Year' => $year, 'School' => $school , 'Promoter 1' => $promoter1, 'Promoter 2' => $promoter2];
+        foreach ($zip->listFiles() as $pdfnames) {
+            $pdfName = $this->storePdfFile($pdfnames);
+            $parsedPdf = $this->parsePdfFile($pdfName);
+            $tableOfContents = $this->getTableOfContents($parsedPdf);
+            $keywords = $this->getKeywords($tableOfContents);
+            $coverPage = $this->convertPdfToImage($pdfName);
+            $details = $this->analyseCoverPage($pdfName);
 
             $work = (new Work)->fill([
-                'finalworkURL' => $img,
+                'finalworkURL' => $coverPage,
                 'finalworkTitle' => $details['Title'],
                 'finalworkDescription' => "",
                 'finalworkAuthor' => $details['Name'],
@@ -126,8 +55,7 @@ class MassController extends Controller
 
             $work->save();
 
-
-            foreach ($tags["documents"][0]["keyPhrases"] as $key => $val) {
+            foreach ($keywords["documents"][0]["keyPhrases"] as $key => $val) {
                 $taglist = Tags::where("tag", $val)->first();
                 if ($taglist != null) {
                     $tagid = $taglist->toArray()["id"];
@@ -140,9 +68,96 @@ class MassController extends Controller
                     Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
                 }
             }
+        }
+        //return json_encode(array('tags' => $keywords, 'img' =>  $coverPage, 'details' => $details));
+        return json_encode("succes");
+    }
 
+    private function storePdfFile($pdfnames) {
+        do {
+            $name = uniqid()."pdf";
+        } while (file_exists(public_path('pdf').$name));
+        rename($pdfnames,$name);
+        return $name;
+    }
+
+    private function parsePdfFile($pdfName) {
+        $parser = new Parser();
+        $pdf = $parser->parseFile(public_path('pdf').$pdfName);
+        return mb_strtolower($pdf->getText());
+
+    }
+
+    private function getTableOfContents($pdf) {
+        $register = ["index", "table of contents", "inhoudstafel", "table of content", "inhouds"];
+        foreach ($register as $word) {
+            $tablePosition = strpos($pdf, $word);
+            if ($tablePosition != null) {
+                break;
+            }
+        }
+        $tableBeginning = substr($pdf,$tablePosition);
+        $limitedTable = substr($tableBeginning, 0,4800);
+        return $limitedTable;
+    }
+
+    private function getKeywords($table) {
+        $client = new Client();
+        $response = $client->request('POST', 'https://westeurope.api.cognitive.microsoft.com/text/analytics/v2.0/KeyPhrases', [
+            'headers' => [
+                'Ocp-Apim-Subscription-Key' => 'c9081ce68d9541cba44b8b78684e8ce5',
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ],
+            'json' => [
+                'documents' => [
+                    [
+                        'language' => 'nl',
+                        'id' => '1',
+                        'text' => $table,
+                    ],
+                ]
+            ]
+        ]);
+        return json_decode($response->getBody(),true);
+    }
+
+    private function convertPdfToImage($name) {
+        $secret = "lTv3cVFVsvFRY3Nf";
+        ConvertApi::setApiSecret($secret);
+        $result = ConvertApi::convert(
+            'jpg',
+            [
+                'File' => 'pdf/'.$name,
+                'PageRange' => '1',
+            ], 'pdf');
+        $result->getFile()->save('pdf/'.substr($name,0,-4).'.jpg');
+        return $result->getFile()->getUrl();
+    }
+
+    private function analyseCoverPage($name) {
+        $request = new AnnotateImageRequest();
+        $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($name,0,-4).'.jpg')));
+        $request->setFeature("TEXT_DETECTION");
+        $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
+        $response = $gcvRequest->annotate();
+        $responseArray = explode("\n", $response->responses[0]->textAnnotations[0]->description);
+        $name = $responseArray[0];
+        foreach ($response as $key => $value) {
+            if (strpos($value, '20') !== false) {
+                $year = $value;
+                $year_key = $key;
+            }
 
         }
-        return "succes?";
+        $title = "";
+        for ($i = 0; $i < $year_key; $i++) {
+            $title .= $responseArray[$key];
+        }
+        $school = $responseArray[$year_key +1];
+        $promotor1 = $responseArray[$year_key +2];
+        $promotor2 = $responseArray[$year_key +3];
+
+        return ["name" => $name, "title" => $title, 'year' => $year, 'school' => $school , 'promotor1' => $promotor1, 'promotor2' => $promotor2];
     }
 }

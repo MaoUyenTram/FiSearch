@@ -24,14 +24,16 @@ class UploadController extends Controller
         $tableOfContents = $this->getTableOfContents($parsedPdf);
         $keywords = $this->getKeywords($tableOfContents);
         $coverPage = $this->convertPdfToImage($pdfName);
-        $details = $this->analyseCoverPage();
+        $details = $this->analyseCoverPage($pdfName);
 
         return json_encode(array('tags' => $keywords, 'img' =>  $coverPage, 'details' => $details));
     }
 
     private function storePdfFile($request) {
-        $name = $request->file('pdf')->getClientOriginalName();
-        $request->file('pdf')->move(public_path('pdf'),$name);
+        do {
+            $name = uniqid();
+        } while (file_exists(public_path('pdf').$name.".pdf"));
+        $request->file('pdf')->move(public_path('pdf'),$name.".pdf");
         return $name;
     }
 
@@ -89,7 +91,7 @@ class UploadController extends Controller
         return $result->getFile()->getUrl();
     }
 
-    private function analyseCoverPage() {
+    private function analyseCoverPage($name) {
         $request = new AnnotateImageRequest();
         $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($name,0,-4).'.jpg')));
         $request->setFeature("TEXT_DETECTION");
