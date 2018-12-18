@@ -182,31 +182,35 @@ class WorkController extends Controller
             $works->whereTagsLike($keyword);
         } 
 
-        // Search for a finalwork based on departement.
+        // Search for a final work based on department.
         if ($request->has('departement')) {
             $works->where('departement', $request->Input('departement'));
         }
 
-        // Search for a finalwork based on year.
+        if ($request->has('author')) {
+            $works->where('finalworkAuthor', 'LIKE', $request->input('author'));
+        }
+
+        // Search for a final work based on year.
         if ($request->has('year')) {
             $works->where('finalworkYear',$request->input('year'));
         }
 
-        // Search for a finalwork based on field of study.
+        // Search for a final work based on field of study.
         if ($request->has('field')) {
             $works->where('finalworkField', $request->input('field'));
         }
-        // Search for a finalwork based on promoter.
+        // Search for a final work based on promoter.
         if ($request->has('promoter')) {
             $works->where('finalworkPromoter', $request->input('promoter'));
         }
 
-         // Search for a finalwork based on maximum year.
+         // Search for a final work based on maximum year.
          if ($request->has('maxYear')) {
             $works->where('finalworkYear', '<=', $request->input('maxYear'));
         }
 
-        // Search for a finalwork based on maximum year.
+        // Search for a final work based on maximum year.
         if ($request->has('minYear')) {
             $works->where('finalworkYear', '>=', $request->input('minYear'));
         }
