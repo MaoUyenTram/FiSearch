@@ -18,3 +18,6 @@ Route::get('/', function() {
 
 Route::get('/annotate', 'AnnotationController@displayForm');
 Route::post('/annotate', 'AnnotationController@annotateImage');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
