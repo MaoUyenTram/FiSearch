@@ -149,9 +149,8 @@ class MassController extends Controller
             if ($value == "") {
                 unset($responseArray[$key]);
             }
-            if (strpos($value, '20') !== false) {
+            if (strpos($value, '20') > -1) {
                 $year = $value;
-                //$year_key = $key == null?0:$key;
                 unset($responseArray[$key]);
             }
         }
@@ -171,7 +170,7 @@ class MassController extends Controller
         }
         foreach ($responseArray as $key => $value) {
             if (strpos(mb_strtolower($value),"ehb") > -1 ||strpos(mb_strtolower($value),"school") > -1 ||strpos(mb_strtolower($value),"college") > -1 ||strpos(mb_strtolower($value),"univers")> -1 ) {
-                $school .= $value;
+                $school .= $value." ";
                 unset($responseArray[$key]);
             }
         }
@@ -179,7 +178,7 @@ class MassController extends Controller
         foreach ($responseArray as $key => $value) {
 
             if (strpos(mb_strtolower($value),"promoter") > -1 || strpos(mb_strtolower($value),"promotor") > -1 || strpos(mb_strtolower($value),"supervisor") > -1) {
-                $promotor .= $value;
+                $promotor .= $value." ";
                 unset($responseArray[$key]);
             }
 
