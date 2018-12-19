@@ -191,7 +191,7 @@ class WorkController extends Controller
         }
 
         if ($request->has('author')) {
-            $works->where('finalworkAuthor', 'LIKE', $request->input('author'));
+            $works->where('finalworkAuthor', 'LIKE', '%' . $request->input('author') . '%');
         }
 
         // Search for a final work based on year.
