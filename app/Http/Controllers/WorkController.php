@@ -202,12 +202,12 @@ class WorkController extends Controller
     private function checkFilters($request) {
         $filterArray = array();
 
-        if ($request->has('departement')) {
-            array_push($filterArray, ['departement', '=', $request->Input('departement')]);
+        if ($request->has('department')) {
+            array_push($filterArray, ['departement', '=', $request->Input('department')]);
         }
 
         if ($request->has('author')) {
-            array_push($filterArray, ['finalworkAuthor', '=',  $request->input('author')]);
+            array_push($filterArray, ['finalworkAuthor', 'LIKE', '%' . $request->input('author') . '%']);
         }
 
         if ($request->has('field')) {
