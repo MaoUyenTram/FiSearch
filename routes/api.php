@@ -33,7 +33,7 @@ Route::get('works/by_title/{title}', 'WorkController@showByTitle')->middleware('
 Route::get('works/by_departement/{departement}', 'WorkController@showByDepartement')->middleware('api','cors');
 Route::get('/pdftoimage', 'PdfToImageController')->middleware('api','cors');
 
-Route::get('/filter', 'WorkController@filter')->middleware('api','cors');
+Route::get('/search', 'WorkController@search')->middleware('api','cors');
 Route::resource('ratings', 'RatingController')->middleware('api','cors');
 
 Route::get('/download/{name}',function($name){
