@@ -151,6 +151,7 @@ class UploadController extends Controller
             unset($responseArray[$key]);
         }
 
+        $name = "";
         $name = end($responseArray);
         $key = key($responseArray);
         unset($responseArray[$key]);
