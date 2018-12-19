@@ -36,6 +36,9 @@ Route::get('/pdftoimage', 'PdfToImageController')->middleware('api','cors');
 Route::get('/filter', 'WorkController@filter')->middleware('api','cors');
 Route::resource('ratings', 'RatingController')->middleware('api','cors');
 
+Route::get('/download/{name}',function($name){
+    return Response::download(public_path('pdf/').$name);
+});
 
 //Route::get('/annotate', 'AnnotationController@displayForm')->middleware('api','cors');
 //Route::post('/annotate', 'AnnotationController@annotateImage')->middleware('api','cors');

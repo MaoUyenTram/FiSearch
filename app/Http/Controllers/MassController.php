@@ -32,10 +32,11 @@ class MassController extends Controller
      */
     public function __invoke(Request $request)
     {
-        set_time_limit(900);
+
         $zip = Zip::open($request->file('zip'));
         $zip->extract(public_path('pdf'));
         foreach ($zip->listFiles() as $pdfnames) {
+            set_time_limit(900);
             $pdfName = $this->storePdfFile($pdfnames);
             $parsedPdf = $this->parsePdfFile($pdfName);
             $tableOfContents = $this->getTableOfContents($parsedPdf);
