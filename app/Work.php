@@ -2,12 +2,11 @@
 
 namespace App;
 
-use Eloquent;
 use willvincent\Rateable\Rateable;
 use Illuminate\Database\Eloquent\Model;
 
 
-class Work extends Eloquent /*Model*/
+class Work extends Model
 {
     use Rateable;
 

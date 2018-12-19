@@ -169,57 +169,62 @@ class WorkController extends Controller
         ]);
     }
 
-    public function filter(Request $request, Work $work)
+    public function search(Request $request)
     {
-     
         $works = (new Work)->newQuery()->with('tags');
+        $filterArray = $this->checkFilters($request);
+        $keywords = $this->divideSearchQuery($request);
 
-        if ($request->has('keyword')) {
-            $keyword = $request->input('keyword');
+        $results = $works->where(function($query) use ($request, $filterArray, $keywords) {
+            $query->where($filterArray);
+            $query->where(function ($query) use ($keywords) {
+                for ($i = 0; $i < count($keywords); $i++) {
+                    $query->where('finalworkTitle', 'LIKE', '%' . $keywords[$i] . '%');
+                    $query->orWhere('finalworkDescription', 'LIKE', '%' . $keywords[$i] . '%');
+                    $query->whereTagsLike($keywords[$i]);
+                }
+            });
+        })->get();
 
+        return $results;
+    }
+
+    private function divideSearchQuery($request) {
+        if ($request->has('q')) {
+            $keyword = $request->input('q');
             $keywords = explode(" ", $keyword);
-            for ($i = 0; $i < count($keywords); $i++) {
-                $works->where('finalworkTitle', 'LIKE', "%{$keywords[$i]}%");
-                $works->orWhere('finalworkDescription', 'LIKE',"%{$keywords[$i]}%");
-                $works->whereTagsLike($keywords[$i]);
-            }
-        } 
+        } else {
+            $keywords = [];
+        }
+        return $keywords;
+    }
 
-        // Search for a final work based on department.
-        if ($request->has('departement')) {
-            $works->where('departement', $request->Input('departement'));
+    private function checkFilters($request) {
+        $filterArray = array();
+
+        if ($request->has('department')) {
+            array_push($filterArray, ['departement', '=', $request->Input('department')]);
         }
 
         if ($request->has('author')) {
-            $works->where('finalworkAuthor', 'LIKE', $request->input('author'));
+            array_push($filterArray, ['finalworkAuthor', 'LIKE', '%' . $request->input('author') . '%']);
         }
 
-        // Search for a final work based on year.
-        if ($request->has('year')) {
-            $works->where('finalworkYear',$request->input('year'));
-        }
-
-        // Search for a final work based on field of study.
         if ($request->has('field')) {
-            $works->where('finalworkField', $request->input('field'));
-        }
-        // Search for a final work based on promoter.
-        if ($request->has('promoter')) {
-            $works->where('finalworkPromoter', $request->input('promoter'));
+            array_push($filterArray, ['finalworkField', 'LIKE',  '%' . $request->input('field') . '%']);
         }
 
-         // Search for a final work based on maximum year.
-         if ($request->has('maxYear')) {
-            $works->where('finalworkYear', '<=', $request->input('maxYear'));
+        if ($request->has('promotor')) {
+            array_push($filterArray, ['finalworkPromoter', 'LIKE',  '%' . $request->input('promotor') . '%']);
         }
 
-        // Search for a final work based on maximum year.
-        if ($request->has('minYear')) {
-            $works->where('finalworkYear', '>=', $request->input('minYear'));
+        if ($request->has('maxYear') || $request->has('minYear')) {
+            $maxYear = $request->has('maxYear') == null ? ['finalworkYear', '<=', date('Y')] : ['finalworkYear', '<=', $request->input('maxYear')];
+            $minYear = $request->has('minYear') == null ? ['finalworkYear', '>=', 1980] : ['finalworkYear', '>=', $request->input('minYear')];
+            array_push($filterArray, $minYear);
+            array_push($filterArray, $maxYear);
         }
 
-        // Get the results and return them.
-
-        return $works->get();
+        return $filterArray;
     }
 }
