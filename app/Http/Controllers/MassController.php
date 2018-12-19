@@ -32,6 +32,7 @@ class MassController extends Controller
      */
     public function __invoke(Request $request)
     {
+        set_time_limit(900);
         $zip = Zip::open($request->file('zip'));
         $zip->extract(public_path('pdf'));
         foreach ($zip->listFiles() as $pdfnames) {
@@ -84,7 +85,7 @@ class MassController extends Controller
     private function parsePdfFile($pdfName) {
         $parser = new Parser();
         $pdf = $parser->parseFile(public_path('pdf/').$pdfName);
-        return mb_strtolower($pdf->getText());
+        return mb_strtolower(str_replace('.','',$pdf->getText()));
 
     }
 
@@ -143,7 +144,7 @@ class MassController extends Controller
         $response = $gcvRequest->annotate();
         $responseArray = explode("\n", $response->responses[0]->textAnnotations[0]->description);
         $name = $responseArray[0];
-        foreach ($response as $key => $value) {
+        foreach ($responseArray as $key => $value) {
             if (strpos($value, '20') !== false) {
                 $year = $value;
                 $year_key = $key;

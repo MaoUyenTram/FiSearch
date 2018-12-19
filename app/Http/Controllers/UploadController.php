@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -19,8 +20,9 @@ class UploadController extends Controller
      */
     public function __invoke(Request $request)
     {
+        set_time_limit(900);
         $pdfName = $this->storePdfFile($request);
-        $parsedPdf = $this->parsePdfFile($request);
+        $parsedPdf = $this->parsePdfFile($pdfName);
         $tableOfContents = $this->getTableOfContents($parsedPdf);
         $keywords = $this->getKeywords($tableOfContents);
         $coverPage = $this->convertPdfToImage($pdfName);
@@ -32,15 +34,15 @@ class UploadController extends Controller
     private function storePdfFile($request) {
         do {
             $name = uniqid().".pdf";
-        } while (file_exists(public_path('pdf').$name));
+        } while (file_exists(public_path('pdf/').$name));
         $request->file('pdf')->move(public_path('pdf'),$name);
         return $name;
     }
 
-    private function parsePdfFile($request) {
+    private function parsePdfFile($pdfName) {
         $parser = new Parser();
-        $pdf = $parser->parseFile($request->file('pdf'));
-        return mb_strtolower($pdf->getText());
+        $pdf = $parser->parseFile(public_path('pdf/').$pdfName);
+        return mb_strtolower(str_replace('.','',$pdf->getText()));
 
     }
 
@@ -99,7 +101,7 @@ class UploadController extends Controller
         $response = $gcvRequest->annotate();
         $responseArray = explode("\n", $response->responses[0]->textAnnotations[0]->description);
         $name = $responseArray[0];
-        foreach ($response as $key => $value) {
+        foreach ($responseArray as $key => $value) {
             if (strpos($value, '20') !== false) {
                 $year = $value;
                 $year_key = $key;
