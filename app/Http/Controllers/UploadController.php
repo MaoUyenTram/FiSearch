@@ -94,6 +94,10 @@ class UploadController extends Controller
         return public_path('pdf/').substr($name,0,-4).'.jpg';
     }
 
+    /**
+     * @param $name
+     * @return array
+     */
     private function analyseCoverPage($name) {
         $request = new AnnotateImageRequest();
         $request->setImage(base64_encode(file_get_contents(public_path('pdf/').substr($name,0,-4).'.jpg')));
@@ -101,22 +105,63 @@ class UploadController extends Controller
         $gcvRequest = new GoogleCloudVision([$request],  env('GOOGLE_CLOUD_API_KEY'));
         $response = $gcvRequest->annotate();
         $responseArray = explode("\n", $response->responses[0]->textAnnotations[0]->description);
-        $name = $responseArray[0];
+        $year = null;
         foreach ($responseArray as $key => $value) {
+            if ($value == "") {
+                unset($responseArray[$key]);
+            }
             if (strpos($value, '20') !== false) {
                 $year = $value;
-                $year_key = $key;
+                //$year_key = $key == null?0:$key;
+                unset($responseArray[$key]);
+            }
+        }
+        if($year == null) {
+            $year = 0;
+        }
+
+        $school = "";
+        $departements = array('institu','campus','depart','Dig-X','Multec','Design & Technologie', 'Gezondheidszorg - Landschapsarchitectuur', 'Koninklijk Conservatorium Brussel - School of Arts', 'Management, Media & Maatschappij', 'Onderwijs & Pedagogie', 'RITCS - School of Arts');
+        for ($i = 0; $i < count($departements); $i++) {
+            foreach ($responseArray as $key => $value) {
+                if (strpos(mb_strtolower($value),mb_strtolower($departements[$i])) > -1) {
+                    $school .= $value." ";
+                    unset($responseArray[$key]);
+                }
+            }
+        }
+        foreach ($responseArray as $key => $value) {
+            if (strpos(mb_strtolower($value),"ehb") > -1 ||strpos(mb_strtolower($value),"school") > -1 ||strpos(mb_strtolower($value),"college") > -1 ||strpos(mb_strtolower($value),"univers")> -1 ) {
+                $school .= $value;
+                unset($responseArray[$key]);
+            }
+        }
+        $promotor = "";
+            foreach ($responseArray as $key => $value) {
+
+            if (strpos(mb_strtolower($value),"promoter") > -1 || strpos(mb_strtolower($value),"promotor") > -1 || strpos(mb_strtolower($value),"supervisor") > -1) {
+                $promotor .= $value;
+                unset($responseArray[$key]);
             }
 
         }
-        $title = "";
-        for ($i = 0; $i < $year_key; $i++) {
-            $title .= $responseArray[$key];
+        if ($promotor == "") {
+            $promotor .= end($responseArray);
+            $key = key($responseArray);
+            unset($responseArray[$key]);
         }
-        $school = $responseArray[$year_key +1];
-        $promotor1 = $responseArray[$year_key +2];
-        $promotor2 = $responseArray[$year_key +3];
 
-        return ["name" => $name, "title" => $title, 'year' => $year, 'school' => $school , 'promotor1' => $promotor1, 'promotor2' => $promotor2];
+        $name = end($responseArray);
+        $key = key($responseArray);
+        unset($responseArray[$key]);
+
+        reset($responseArray);
+
+        $title ="";
+        foreach ($responseArray as $rest){
+            $title .= $rest." ";
+        }
+
+        return ["name" => $name, "title" => $title, 'year' => $year, 'school' => $school , 'promotor' => $promotor];
     }
 }
