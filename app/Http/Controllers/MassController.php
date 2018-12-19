@@ -134,7 +134,7 @@ class MassController extends Controller
                 'PageRange' => '1',
             ], 'pdf');
         $result->getFile()->save('pdf/'.substr($name,0,-4).'.jpg');
-        return $result->getFile()->getUrl();
+        return public_path('pdf/').substr($name,0,-4).'.jpg';
     }
 
     private function analyseCoverPage($name) {
