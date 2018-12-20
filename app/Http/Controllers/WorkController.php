@@ -77,6 +77,7 @@ class WorkController extends Controller
         return "succes";
         //return print_r($thetag);
         //return new WorkResource($work);
+        return "succes!";
     }
 
     public function firstOrResponse($field, $value) {

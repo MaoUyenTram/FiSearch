@@ -199,6 +199,6 @@ class UploadController extends Controller
             $description .= $rest." ";
         }
 
-        return ["name" => $name, "title" => substr($description, 0, 255), 'description' => $description, 'year' => $year, 'school' => $school , 'promotor' => $promotor];
+        return ["name" => $name, "title" => substr($description, 0, 254), 'description' => substr($description, 0, 499 ), 'year' => $year, 'school' => $school , 'promotor' => $promotor];
     }
 }
