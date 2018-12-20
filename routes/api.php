@@ -12,39 +12,28 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Upload a PDF file for Analysis
+Route::post('/upload', 'UploadController');
+Route::post('/massupload', 'MassController');
+Route::post('/confirm', 'WorkController@store');
 
-Route::post('/upload', 'UploadController')->middleware('api', 'cors');
-Route::post('/massupload', 'MassController')->middleware('api', 'cors');
-Route::post('/confirm', 'WorkController@store')->middleware('api', 'cors');
-
-Route::get('/departments', 'DepartmentsController')->middleware('api','cors');
-
-
-Route::resource('works', 'WorkController');
-Route::get('works/by_title/{title}', 'WorkController@showByTitle')->middleware('api', 'cors');
-Route::get('works/by_departement/{departement}', 'WorkController@showByDepartement')->middleware('api','cors');
-Route::get('/pdftoimage', 'PdfToImageController')->middleware('api','cors');
-
-Route::get('/search', 'WorkController@search')->middleware('api','cors');
-Route::resource('ratings', 'RatingController')->middleware('api','cors');
-
+//Download the PDF file
 Route::get('/download/{name}',function($name){
     return Response::download(public_path('pdf/').$name);
 });
 
+//Get the EhB departments
+Route::get('/departments', 'DepartmentsController');
+
+//Search final works and get ratings
+Route::get('/search', 'WorkController@search');
+Route::resource('ratings', 'RatingController');
 
 // Code from Laravel Passport Tuturial: https://medium.com/modulr/create-api-authentication-with-passport-of-laravel-5-6-1dc2d400a7f
-Route::group([
-    'prefix' => 'auth'
-], function () {
+Route::group(['prefix' => 'auth'], function () {
     Route::post('login', 'AuthController@login');
-
     Route::group([
-        'middleware' => 'auth:api'
-    ], function() {
+        'middleware' => 'auth:api'], function() {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });
