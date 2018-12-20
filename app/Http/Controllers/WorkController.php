@@ -57,16 +57,24 @@ class WorkController extends Controller
         $work->save();
 
         if($request->exists("tags")){
-            foreach ( $request->input("tags") as $arr){
-                $thetag = (new Tags)->fill([
-                    'tag'=> $arr['tag']
-                ]);
-                $thetag->save();
-                Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
+            $tagstring = str_replace('"','',substr($request->input("tags"),1,-1));
+            $tagarray = explode(",",$tagstring);
+            foreach ($tagarray as $key => $val) {
+                $taglist = Tags::where("tag", $val)->first();
+                if ($taglist != null) {
+                    $tagid = $taglist->toArray()["id"];
+                    Work::orderBy('created_at', 'desc')->first()->tags()->attach($tagid);
+                } else {
+                    $thetag = (new Tags)->fill([
+                        'tag' => $val
+                    ]);
+                    $thetag->save();
+                    Work::orderBy('created_at', 'desc')->first()->tags()->save($thetag);
+                }
             }
         }
 
-        return new TagResource($thetag);
+        return "succes";
         //return print_r($thetag);
         //return new WorkResource($work);
     }
