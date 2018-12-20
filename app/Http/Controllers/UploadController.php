@@ -192,11 +192,12 @@ class UploadController extends Controller
 
         reset($responseArray);
 
-        $title ="";
+        $title = "";
+        $description = "";
         foreach ($responseArray as $rest){
-            $title .= $rest." ";
+            $description .= $rest." ";
         }
 
-        return ["name" => $name, "title" => $title, 'year' => $year, 'school' => $school , 'promotor' => $promotor];
+        return ["name" => $name, "title" => substr($description, 0, 255), 'description' => $description, 'year' => $year, 'school' => $school , 'promotor' => $promotor];
     }
 }

@@ -14,22 +14,11 @@ class DepartmentsController extends Controller
      */
     public function __invoke(Request $request)
     {
-       // $departements = array('departments' => ['Design & Technologie', 'Gezondheidszorg - Landschapsarchitectuur', 'Koninklijk Conservatorium Brussel - School of Arts', 'Management, Media & Maatschappij', 'Onderwijs & Pedagogie', 'RITCS - School of Arts']);
-      
-      
-     //return response()
-       //     ->json($departements);
-
-            // Load the view
-            // return Departments + id
-
-            //return Departments::all();
-            
-            // return only Departments
-           return Departments::all("Departments");
-          
-
-
-
+        $departments = [];
+        $departmentsTable = Departments::all("Departments")->toArray();
+        foreach ($departmentsTable as $dep) {
+            array_push($departments, $dep['Departments']);
+        }
+        return json_encode(['departments' => $departments]);
     }
 }
