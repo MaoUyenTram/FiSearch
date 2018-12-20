@@ -28,6 +28,7 @@ Route::get('/departments', 'DepartmentsController');
 //Search final works and get ratings
 Route::get('/search', 'WorkController@search');
 Route::resource('ratings', 'RatingController');
+Route::get('ratingsAvg/{id}', 'RatingController@showAverage');
 
 // Code from Laravel Passport Tuturial: https://medium.com/modulr/create-api-authentication-with-passport-of-laravel-5-6-1dc2d400a7f
 Route::group(['prefix' => 'auth'], function () {

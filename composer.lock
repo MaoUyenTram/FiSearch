@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
     "content-hash": "ad7de5af712c105224fab532524e9064",
@@ -159,20 +159,20 @@
         },
         {
             "name": "barryvdh/laravel-ide-helper",
-            "version": "v2.5.2",
+            "version": "v2.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-ide-helper.git",
-                "reference": "981ff45b43e0cf808af0a5a5f40f6369e0e29499"
+                "reference": "3d7f1240896a075aa23b13f82dfcbe165dadeef2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/981ff45b43e0cf808af0a5a5f40f6369e0e29499",
-                "reference": "981ff45b43e0cf808af0a5a5f40f6369e0e29499",
+                "url": "https://api.github.com/repos/barryvdh/laravel-ide-helper/zipball/3d7f1240896a075aa23b13f82dfcbe165dadeef2",
+                "reference": "3d7f1240896a075aa23b13f82dfcbe165dadeef2",
                 "shasum": ""
             },
             "require": {
-                "barryvdh/reflection-docblock": "^2.0.4",
+                "barryvdh/reflection-docblock": "^2.0.6",
                 "composer/composer": "^1.6",
                 "illuminate/console": "^5.5,<5.8",
                 "illuminate/filesystem": "^5.5,<5.8",
@@ -229,20 +229,20 @@
                 "phpstorm",
                 "sublime"
             ],
-            "time": "2018-10-06T09:35:51+00:00"
+            "time": "2018-12-19T12:12:05+00:00"
         },
         {
             "name": "barryvdh/reflection-docblock",
-            "version": "v2.0.5",
+            "version": "v2.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/ReflectionDocBlock.git",
-                "reference": "64165bd4ba9a550d11ea57569463b7c722dc6b0a"
+                "reference": "6b69015d83d3daf9004a71a89f26e27d27ef6a16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/ReflectionDocBlock/zipball/64165bd4ba9a550d11ea57569463b7c722dc6b0a",
-                "reference": "64165bd4ba9a550d11ea57569463b7c722dc6b0a",
+                "url": "https://api.github.com/repos/barryvdh/ReflectionDocBlock/zipball/6b69015d83d3daf9004a71a89f26e27d27ef6a16",
+                "reference": "6b69015d83d3daf9004a71a89f26e27d27ef6a16",
                 "shasum": ""
             },
             "require": {
@@ -278,7 +278,7 @@
                     "email": "mike.vanriel@naenius.com"
                 }
             ],
-            "time": "2018-10-25T19:09:52+00:00"
+            "time": "2018-12-13T10:34:14+00:00"
         },
         {
             "name": "composer/ca-bundle",
@@ -1149,16 +1149,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.25.0",
+            "version": "v1.25.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "7c91113b0a352f5d0ee70530a6e2634e91847dc0"
+                "reference": "106c78d25b14f55167338d71737507be2bf8400c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/7c91113b0a352f5d0ee70530a6e2634e91847dc0",
-                "reference": "7c91113b0a352f5d0ee70530a6e2634e91847dc0",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/106c78d25b14f55167338d71737507be2bf8400c",
+                "reference": "106c78d25b14f55167338d71737507be2bf8400c",
                 "shasum": ""
             },
             "require": {
@@ -1173,7 +1173,7 @@
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
-                "google/gax": "^0.37",
+                "google/gax": "^0.38.0",
                 "opis/closure": "^3",
                 "phpdocumentor/reflection": "^3.0",
                 "phpunit/phpunit": "^4.8|^5.0",
@@ -1205,25 +1205,25 @@
                 "Apache-2.0"
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
-            "time": "2018-12-10T22:57:51+00:00"
+            "time": "2018-12-18T18:55:23+00:00"
         },
         {
             "name": "google/cloud-vision",
-            "version": "v0.19.0",
+            "version": "v0.19.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-vision.git",
-                "reference": "3b6e38f30fac67ded8e5b5fe33a3125fe372c95c"
+                "reference": "ade94781f6784059eeba0c9326f298335c141590"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-vision/zipball/3b6e38f30fac67ded8e5b5fe33a3125fe372c95c",
-                "reference": "3b6e38f30fac67ded8e5b5fe33a3125fe372c95c",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-vision/zipball/ade94781f6784059eeba0c9326f298335c141590",
+                "reference": "ade94781f6784059eeba0c9326f298335c141590",
                 "shasum": ""
             },
             "require": {
                 "google/cloud-core": "^1.23",
-                "google/gax": "^0.37"
+                "google/gax": "^0.38.0"
             },
             "require-dev": {
                 "erusev/parsedown": "^1.6",
@@ -1257,26 +1257,66 @@
                 "Apache-2.0"
             ],
             "description": "Cloud Vision Client for PHP",
-            "time": "2018-11-27T19:21:13+00:00"
+            "time": "2018-12-18T18:55:23+00:00"
         },
         {
-            "name": "google/gax",
-            "version": "0.37.0",
+            "name": "google/common-protos",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/googleapis/gax-php.git",
-                "reference": "2d8b9103f1be3e3ababd8a733beae705d563edf5"
+                "url": "https://github.com/googleapis/common-protos-php.git",
+                "reference": "0bc3c17350a37423da29391fa3d0e6082dd896b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/2d8b9103f1be3e3ababd8a733beae705d563edf5",
-                "reference": "2d8b9103f1be3e3ababd8a733beae705d563edf5",
+                "url": "https://api.github.com/repos/googleapis/common-protos-php/zipball/0bc3c17350a37423da29391fa3d0e6082dd896b5",
+                "reference": "0bc3c17350a37423da29391fa3d0e6082dd896b5",
+                "shasum": ""
+            },
+            "require": {
+                "google/protobuf": "^3.6.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.36",
+                "sami/sami": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Google\\": "src",
+                    "GPBMetadata\\Google\\": "metadata"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "Google API Common Protos for PHP",
+            "homepage": "https://github.com/googleapis/common-protos-php",
+            "keywords": [
+                "google"
+            ],
+            "time": "2018-11-05T20:09:01+00:00"
+        },
+        {
+            "name": "google/gax",
+            "version": "0.38.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/googleapis/gax-php.git",
+                "reference": "ba141d49c58f949a31b9cfb31f6da876adc2919d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/googleapis/gax-php/zipball/ba141d49c58f949a31b9cfb31f6da876adc2919d",
+                "reference": "ba141d49c58f949a31b9cfb31f6da876adc2919d",
                 "shasum": ""
             },
             "require": {
                 "google/auth": "^1.2.0",
+                "google/common-protos": "^0.1",
                 "google/grpc-gcp": "^0.1.0",
-                "google/protobuf": "^3.5.1",
+                "google/protobuf": "^3.6.1",
                 "grpc/grpc": "^1.4",
                 "guzzlehttp/promises": "^1.3",
                 "guzzlehttp/psr7": "^1.2",
@@ -1290,14 +1330,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Google\\Api\\": "src/Api",
-                    "Google\\ApiCore\\": "src/ApiCore",
-                    "Google\\Cloud\\": "src/Cloud",
-                    "Google\\Iam\\": "src/Iam",
-                    "Google\\Jison\\": "src/Jison",
-                    "Google\\LongRunning\\": "src/LongRunning",
-                    "Google\\Rpc\\": "src/Rpc",
-                    "Google\\Type\\": "src/Type",
+                    "Google\\ApiCore\\": "src",
                     "GPBMetadata\\Google\\": "metadata"
                 }
             },
@@ -1310,7 +1343,7 @@
             "keywords": [
                 "google"
             ],
-            "time": "2018-08-20T19:05:50+00:00"
+            "time": "2018-12-17T16:37:25+00:00"
         },
         {
             "name": "google/grpc-gcp",
@@ -1772,16 +1805,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.7.17",
+            "version": "v5.7.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "a15898e2de5f5ae5548a09349c558ef0435d495a"
+                "reference": "5c1d1ec7e8563ea31826fd5eb3f6791acf01160c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/a15898e2de5f5ae5548a09349c558ef0435d495a",
-                "reference": "a15898e2de5f5ae5548a09349c558ef0435d495a",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5c1d1ec7e8563ea31826fd5eb3f6791acf01160c",
+                "reference": "5c1d1ec7e8563ea31826fd5eb3f6791acf01160c",
                 "shasum": ""
             },
             "require": {
@@ -1914,7 +1947,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-12-12T14:38:09+00:00"
+            "time": "2018-12-18T14:00:38+00:00"
         },
         {
             "name": "laravel/nexmo-notification-channel",
@@ -2210,7 +2243,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "Developer"
+                    "role": "developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -2569,16 +2602,16 @@
         },
         {
             "name": "nexmo/client",
-            "version": "1.5.2",
+            "version": "1.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Nexmo/nexmo-php.git",
-                "reference": "f192c84ec3cc3e2657fc754e0da1a17e39ac5542"
+                "reference": "01809cc1e17a5af275913c49bb5d444eb6cc06d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Nexmo/nexmo-php/zipball/f192c84ec3cc3e2657fc754e0da1a17e39ac5542",
-                "reference": "f192c84ec3cc3e2657fc754e0da1a17e39ac5542",
+                "url": "https://api.github.com/repos/Nexmo/nexmo-php/zipball/01809cc1e17a5af275913c49bb5d444eb6cc06d4",
+                "reference": "01809cc1e17a5af275913c49bb5d444eb6cc06d4",
                 "shasum": ""
             },
             "require": {
@@ -2613,7 +2646,7 @@
                 }
             ],
             "description": "PHP Client for using Nexmo's API.",
-            "time": "2018-11-14T14:12:22+00:00"
+            "time": "2018-12-17T10:47:50+00:00"
         },
         {
             "name": "nikic/php-parser",

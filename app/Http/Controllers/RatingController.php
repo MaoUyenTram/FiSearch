@@ -46,4 +46,13 @@ class RatingController extends Controller
 
         return $work->ratings;
     }
+
+     // Average rating opvragen
+     public function showAverage($id, Request $request)
+     {
+         $work = $this->getWorkById($id);
+ 
+         return $work->averageRating;
+     }
+
 }
