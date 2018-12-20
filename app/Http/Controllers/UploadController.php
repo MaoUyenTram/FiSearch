@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use Faker\Provider\Image;
 use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
 use GuzzleHttp\Client;
@@ -32,7 +33,7 @@ class UploadController extends Controller
         $coverPage = $this->convertPdfToImage($firstPage);
         $details = $this->analyseCoverPage($firstPage);
 
-        return json_encode(array('tags' => $keywords, 'img' =>  $coverPage, 'details' => $details));
+        return json_encode(array('tags' => $keywords, 'img' =>  'http://localhost:8888/fisearch/public/api/cdn/' . $coverPage, 'details' => $details));
     }
 
     private function storePdfFile($request) {
@@ -125,7 +126,7 @@ class UploadController extends Controller
             ], 'pdf');
         $result->getFile()->save('pdf/'.substr($name,0,-4).'.jpg');
         //return $result->getFile()->getUrl();
-        return public_path('pdf/').substr($name,0,-4).'.jpg';
+        return substr($name,0,-4).'.jpg';
     }
 
     /**
