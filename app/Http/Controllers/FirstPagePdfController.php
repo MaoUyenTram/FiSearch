@@ -8,7 +8,7 @@ use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\PdfParserException;
 use setasign\Fpdi\PdfReader\PdfReaderException;
 
-class FirstPagePdf extends Controller
+class FirstPagePdfController extends Controller
 {
     public function getFirstPage() {
         if (file_exists(public_path('pdf/constraints.pdf'))) {
