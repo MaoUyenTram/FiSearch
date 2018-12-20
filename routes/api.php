@@ -27,7 +27,8 @@ Route::get('/departments', 'DepartmentsController');
 
 //Search final works and get ratings
 Route::get('/search', 'WorkController@search');
-Route::resource('ratings', 'RatingController');
+// Authenticatie nodig omdat de user_id wordt gebruikt om een entry te maken in de ratings table.
+Route::resource('ratings', 'RatingController')->middleware('auth:api');
 Route::get('ratingsAvg/{id}', 'RatingController@showAverage');
 
 // Code from Laravel Passport Tuturial: https://medium.com/modulr/create-api-authentication-with-passport-of-laravel-5-6-1dc2d400a7f
@@ -38,4 +39,10 @@ Route::group(['prefix' => 'auth'], function () {
         Route::get('logout', 'AuthController@logout');
         Route::get('user', 'AuthController@user');
     });
+});
+
+Route::get('/cdn/{image}', function($image) {
+    //dd(public_path('./pdf/' . $image));
+
+    return response()->file(public_path('./pdf/' . $image));
 });
