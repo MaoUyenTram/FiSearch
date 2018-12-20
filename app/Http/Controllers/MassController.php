@@ -39,10 +39,11 @@ class MassController extends Controller
             set_time_limit(900);
             $pdfName = $this->storePdfFile($pdfnames);
             $parsedPdf = $this->parsePdfFile($pdfName);
+            $firstPage = $this->getFirstPagePdf($pdfName);
             $tableOfContents = $this->getTableOfContents($parsedPdf);
             $keywords = $this->getKeywords($tableOfContents);
-            $coverPage = $this->convertPdfToImage($pdfName);
-            $details = $this->analyseCoverPage($pdfName);
+            $coverPage = $this->convertPdfToImage($firstPage);
+            $details = $this->analyseCoverPage($firstPage);
 
             $work = (new Work)->fill([
                 'finalworkURL' => $coverPage,
@@ -88,6 +89,36 @@ class MassController extends Controller
         $pdf = $parser->parseFile(public_path('pdf/').$pdfName);
         return mb_strtolower(str_replace('.','',$pdf->getText()));
 
+    }
+
+    private function getFirstPagePdf($name) {
+        if (file_exists(public_path('pdf/' . $name))) {
+            $filename = public_path('pdf/' . $name);
+        } else {
+            return $name;
+        }
+
+        $fpdi = new Fpdi();
+        $fpdi->addPage();
+        try {
+            $fpdi->setSourceFile($filename);
+        } catch (PdfParserException $e) {
+            echo $e;
+        }
+        try {
+            $fpdi->useTemplate($fpdi->importPage(1));
+        } catch (PdfReaderException $e) {
+            echo $e;
+        } catch (PdfParserException $f) {
+            echo $f;
+        }
+
+        $newFileLocation = str_replace('.pdf', '', $filename) . '_firstPage' . ".pdf";
+        $newFileName = str_replace('.pdf', '', $name) . '_firstPage' . ".pdf";
+
+        $fpdi->Output($newFileLocation, 'F');
+        $fpdi->close();
+        return $newFileName;
     }
 
     private function getTableOfContents($pdf) {
